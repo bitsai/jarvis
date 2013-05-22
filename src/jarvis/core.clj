@@ -1,7 +1,7 @@
 (ns jarvis.core
   (:require [clojure.string :as str]
-            [jarvis.speech :as speech]
-            [jarvis.weather :as weather]))
+            [jarvis.commands.weather :as weather]
+            [jarvis.speech :as speech]))
 
 (def command-fns
   {"print"   (fn [args] (apply println args))

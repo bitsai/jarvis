@@ -3,11 +3,17 @@
             [jarvis.commands.weather :as weather]
             [jarvis.speech :as speech]))
 
-(def command-fns
-  {"print"   (fn [args] (apply println args))
-   "say"     (fn [args] (speech/say! (str/join " " args)))
-   "weather" (fn [args] (weather/announce! (str/join " " args)))})
+(def commands
+  [{:prefix "print"   :fn println}
+   {:prefix "say"     :fn speech/say!}
+   {:prefix "weather" :fn weather/announce!}])
 
-(defn process! [[cmd & args]]
-  (when-let [f (get command-fns cmd)]
-    (f args)))
+(defn matches? [prefix s]
+  (re-find (re-pattern (str "^" prefix " ")) s))
+
+(defn process! [s]
+  (if-let [cmd (->> commands
+                    (filter #(-> % :prefix (matches? s)))
+                    first)]
+    ((:fn cmd) (subs s (-> cmd :prefix count inc)))
+    (speech/say! "I don't know that command.")))

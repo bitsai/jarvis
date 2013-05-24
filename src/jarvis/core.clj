@@ -1,19 +1,24 @@
 (ns jarvis.core
-  (:require [clojure.string :as str]
+  (:require [clojure.java.shell :as shell]
+            [clojure.string :as str]
+            [jarvis.commands.spotify :as spotify]
             [jarvis.commands.weather :as weather]
             [jarvis.speech :as speech]))
 
 (def commands
-  [{:prefix "print"   :fn println}
-   {:prefix "say"     :fn speech/say!}
-   {:prefix "weather" :fn weather/announce!}])
+  (concat
+   [{:cmd ["print"]   :fn (fn [ws] (println (apply str ws)))}
+    {:cmd ["say"]     :fn (fn [ws] (speech/say! (apply str ws)))}
+    {:cmd ["weather"] :fn (fn [ws] (weather/announce! (apply str ws)))}]
+   spotify/commands))
 
-(defn matches? [prefix s]
-  (re-find (re-pattern (str "^" prefix " ")) s))
+(defn matches? [cmd words]
+  (let [n (count cmd)]
+    (= cmd (take n words))))
 
-(defn process! [s]
-  (if-let [cmd (->> commands
-                    (filter #(-> % :prefix (matches? s)))
-                    first)]
-    ((:fn cmd) (subs s (-> cmd :prefix count inc)))
+(defn process! [words]
+  (if-let [match (->> commands
+                      (filter #(-> % :cmd (matches? words)))
+                      first)]
+    ((:fn match) (drop (count (:cmd match)) words))
     (speech/say! "I don't know that command.")))

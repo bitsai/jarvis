@@ -1,5 +1,6 @@
 (ns jarvis.server
-  (:require [jarvis.core :as jarvis]
+  (:require [clojure.string :as str]
+            [jarvis.core :as jarvis]
             [ring.adapter.jetty :as jetty]
             [ring.util.response :as resp]))
 
@@ -7,6 +8,7 @@
   (-> req
       (:body)
       (slurp)
+      (str/split #" ")
       (jarvis/process!))
   (resp/response nil))
 

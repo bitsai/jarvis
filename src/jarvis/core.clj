@@ -1,6 +1,5 @@
 (ns jarvis.core
-  (:require [clojure.java.shell :as shell]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [jarvis.commands.spotify :as spotify]
             [jarvis.commands.weather :as weather]
             [jarvis.speech :as speech]))

@@ -8,9 +8,9 @@
 (def commands
   (concat
    [{:cmd ["print"]   :fn (fn [ws] (println (apply str ws)))}
-    {:cmd ["say"]     :fn (fn [ws] (speech/say! (apply str ws)))}
-    {:cmd ["weather"] :fn (fn [ws] (weather/announce! (apply str ws)))}]
-   spotify/commands))
+    {:cmd ["say"]     :fn (fn [ws] (speech/say! (apply str ws)))}]
+   spotify/commands
+   weather/commands))
 
 (defn matches? [cmd words]
   (let [n (count cmd)]

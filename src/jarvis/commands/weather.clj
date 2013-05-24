@@ -55,3 +55,6 @@
     (speech/say! (format line1 name temp condition))
     (speech/say! (format line2 wind humidity))
     (speech/say! (format line3 high low))))
+
+(def commands
+  [{:cmd ["weather"] :fn (fn [ws] (announce! (apply str ws)))}])

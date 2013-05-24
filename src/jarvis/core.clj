@@ -19,6 +19,6 @@
   (if-let [match (->> commands
                       (filter #(-> % :cmd (matches? words)))
                       first)]
-    (let [n (cound (:cmd match))]
+    (let [n (count (:cmd match))]
       ((:fn match) (drop n words)))
     (speech/say! "I don't know that command.")))

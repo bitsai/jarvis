@@ -3,6 +3,7 @@
             [clj-time.core :as time]
             [clj-time.format :as time-fmt]
             [clj-time.local :as time-local]
+            [clojure.string :as str]
             [jarvis.speech :as speech]))
 
 (defn announce-time! []
@@ -57,4 +58,4 @@
     (speech/say! (format line3 high low))))
 
 (def commands
-  [{:cmd ["weather"] :fn (fn [ws] (announce! (apply str ws)))}])
+  [{:cmd ["weather"] :fn (fn [ws] (announce! (str/join " " ws)))}])

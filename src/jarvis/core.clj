@@ -6,8 +6,8 @@
 
 (def commands
   (concat
-   [{:cmd ["print"] :fn (fn [ws] (println (apply str ws)))}
-    {:cmd ["say"]   :fn (fn [ws] (speech/say! (apply str ws)))}]
+   [{:cmd ["print"] :fn (fn [ws] (println (str/join " " ws)))}
+    {:cmd ["say"]   :fn (fn [ws] (speech/say! (str/join  " " ws)))}]
    spotify/commands
    weather/commands))
 

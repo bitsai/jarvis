@@ -7,8 +7,8 @@
 
 (def commands
   (concat
-   [{:cmd ["print"]   :fn (fn [ws] (println (apply str ws)))}
-    {:cmd ["say"]     :fn (fn [ws] (speech/say! (apply str ws)))}]
+   [{:cmd ["print"] :fn (fn [ws] (println (apply str ws)))}
+    {:cmd ["say"]   :fn (fn [ws] (speech/say! (apply str ws)))}]
    spotify/commands
    weather/commands))
 
@@ -20,5 +20,6 @@
   (if-let [match (->> commands
                       (filter #(-> % :cmd (matches? words)))
                       first)]
-    ((:fn match) (drop (count (:cmd match)) words))
+    (let [n (cound (:cmd match))]
+      ((:fn match) (drop n words)))
     (speech/say! "I don't know that command.")))

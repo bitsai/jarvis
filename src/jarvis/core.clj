@@ -1,5 +1,6 @@
 (ns jarvis.core
   (:require [clojure.string :as str]
+            [jarvis.commands.dvd :as dvd]
             [jarvis.commands.spotify :as spotify]
             [jarvis.commands.weather :as weather]
             [jarvis.speech :as speech]))
@@ -8,6 +9,7 @@
   (concat
    [{:cmd ["print"] :fn (fn [ws] (println (str/join " " ws)))}
     {:cmd ["say"]   :fn (fn [ws] (speech/say! (str/join  " " ws)))}]
+   dvd/commands
    spotify/commands
    weather/commands))
 

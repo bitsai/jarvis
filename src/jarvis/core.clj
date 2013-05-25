@@ -18,9 +18,10 @@
     (= cmd (take n words))))
 
 (defn process! [words]
-  (if-let [match (->> commands
-                      (filter #(-> % :cmd (matches? words)))
-                      first)]
-    (let [n (count (:cmd match))]
-      ((:fn match) (drop n words)))
-    (speech/say! "I don't know that command.")))
+  (let [lowered (map str/lower-case words)]
+    (if-let [match (->> commands
+                        (filter #(-> % :cmd (matches? lowered)))
+                        first)]
+      (let [n (count (:cmd match))]
+        ((:fn match) (drop n lowered)))
+      (speech/say! "I don't know that command."))))

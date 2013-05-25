@@ -12,7 +12,7 @@
 
 (def commands
   [{:cmd ["spotify" "play"]     :fn (fn [_] (util/osa app "play"))}
-   {:cmd ["spotify" "pause"]    :fn (fn [_] (util/osa app "pause"))}
+   {:cmd ["spotify" "stop"]     :fn (fn [_] (util/osa app "pause"))}
    {:cmd ["spotify" "next"]     :fn (fn [_] (util/osa app "next track"))}
    {:cmd ["spotify" "previous"] :fn (fn [_] (util/osa app "previous track"))}
    {:cmd ["spotify" "volume"]   :fn (fn [ws] (set-volume (first ws)))}])

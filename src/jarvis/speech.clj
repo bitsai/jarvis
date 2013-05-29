@@ -2,11 +2,9 @@
   (:import [javazoom.jl.player Player])
   (:require [clj-http.client :as http]))
 
-(defn play! [stream]
-  (.play (Player. stream)))
-
 (defn say! [text]
   (-> "http://translate.google.com/translate_tts"
       (http/get {:query-params {:tl "en" :q text} :as :stream})
       (:body)
-      (play!)))
+      (Player.)
+      (.play)))

@@ -8,7 +8,7 @@
 
 (defn set-volume [vol]
   (try
-    (osa/do! (str "set volume output volume " (Float. vol)))
+    (osa/do! (str "set volume output volume " (Double. vol)))
     (catch Exception e
       (speech/say! "volume should be a number between 0 and 100."))))
 

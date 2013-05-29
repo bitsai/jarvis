@@ -3,12 +3,20 @@
             [jarvis.commands.dvd :as dvd]
             [jarvis.commands.spotify :as spotify]
             [jarvis.commands.weather :as weather]
+            [jarvis.osa :as osa]
             [jarvis.speech :as speech]))
+
+(defn set-volume [vol]
+  (try
+    (osa/do! (str "set volume " (Integer. vol)))
+    (catch Exception e
+      (speech/say! "volume should be a number between 0 and 10."))))
 
 (def commands
   (concat
-   [{:cmd ["print"] :fn (fn [ws] (println (str/join " " ws)))}
-    {:cmd ["say"]   :fn (fn [ws] (speech/say! (str/join  " " ws)))}]
+   [{:cmd ["print"]  :fn (fn [ws] (println (str/join " " ws)))}
+    {:cmd ["say"]    :fn (fn [ws] (speech/say! (str/join  " " ws)))}
+    {:cmd ["volume"] :fn (fn [ws] (set-volume (first ws)))}]
    dvd/commands
    spotify/commands
    weather/commands))

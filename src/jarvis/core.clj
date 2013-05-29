@@ -10,7 +10,7 @@
   (try
     (osa/do! (str "set volume " (Integer. vol)))
     (catch Exception e
-      (speech/say! "volume should be a number between 0 and 10."))))
+      (speech/say! "volume should be a number between 0 and 7."))))
 
 (def commands
   (concat
@@ -29,7 +29,7 @@
   (let [lowered (map str/lower-case words)]
     (if-let [match (->> commands
                         (filter #(-> % :cmd (matches? lowered)))
-                        first)]
+                        (first))]
       (let [n (count (:cmd match))]
         ((:fn match) (drop n lowered)))
       (speech/say! "I don't know that command."))))

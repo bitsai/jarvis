@@ -10,8 +10,8 @@
   (-> "http://ws.spotify.com/search/1/album.json"
       (http/get {:query-params {:q query} :as :json})
       (:body)
-      :albums
-      first))
+      (:albums)
+      (first)))
 
 (defn play-album! [query]
   (if-let [{:keys [href]} (get-album query)]
@@ -19,8 +19,9 @@
     (speech/say! "album not found.")))
 
 (def commands
-  [{:cmd ["spotify" "play"]     :fn (fn [_] (osa/do! "play" app))}
+  [{:cmd ["spotify" "album"]    :fn (fn [ws] (play-album! (str/join " " ws)))}
+   {:cmd ["spotify" "play"]     :fn (fn [_] (osa/do! "play" app))}
    {:cmd ["spotify" "stop"]     :fn (fn [_] (osa/do! "pause" app))}
    {:cmd ["spotify" "next"]     :fn (fn [_] (osa/do! "next track" app))}
    {:cmd ["spotify" "previous"] :fn (fn [_] (osa/do! "previous track" app))}
-   {:cmd ["spotify" "album"]    :fn (fn [ws] (play-album! (str/join " " ws)))}])
+   {:cmd ["spotify" "quit"]     :fn (fn [_] (osa/do! "quit" app))}])

@@ -33,7 +33,9 @@
   [{:cmd ["dvd" "audio"]      :fn (fn [[w]] (set-audio! w))}
    {:cmd ["dvd" "chapter"]    :fn (fn [[w]] (set-chapter! w))}
    {:cmd ["dvd" "eject"]      :fn (fn [_] (do! "eject dvd"))}
+   {:cmd ["dvd" "enter"]      :fn (fn [_] (do! "press enter key"))}
    {:cmd ["dvd" "fullscreen"] :fn (fn [[w]] (set-fullscreen! w))}
+   {:cmd ["dvd" "menu"]       :fn (fn [_] (do! "go to main menu"))}
    {:cmd ["dvd" "play"]       :fn (fn [_] (do! "play dvd"))}
    {:cmd ["dvd" "quit"]       :fn (fn [_] (do! "quit"))}
    {:cmd ["dvd" "stop"]       :fn (fn [_] (do! "pause dvd"))}

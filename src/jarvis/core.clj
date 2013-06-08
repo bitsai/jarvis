@@ -6,17 +6,21 @@
             [jarvis.osa :as osa]
             [jarvis.speech :as speech]))
 
-(defn set-volume [word]
+(defn set-volume! [word]
   (try
     (osa/do! (str "set volume output volume " (Double. word)))
     (catch Exception e
       (speech/say! "volume should be a number between 0 and 100."))))
 
+(defn start-screensaver! []
+  (osa/do! "System Events" "start current screen saver"))
+
 (def commands
   (concat
-   [{:cmd ["print"]  :fn (fn [ws] (println (str/join " " ws)))}
-    {:cmd ["say"]    :fn (fn [ws] (speech/say! (str/join  " " ws)))}
-    {:cmd ["volume"] :fn (fn [[w]] (set-volume w))}]
+   [{:cmd ["print"]       :fn (fn [ws] (println (str/join " " ws)))}
+    {:cmd ["say"]         :fn (fn [ws] (speech/say! (str/join  " " ws)))}
+    {:cmd ["screensaver"] :fn (fn [_] (start-screensaver!))}
+    {:cmd ["volume"]      :fn (fn [[w]] (set-volume! w))}]
    dvd/commands
    spotify/commands
    weather/commands))

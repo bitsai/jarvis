@@ -3,41 +3,33 @@
             [jarvis.speech :as speech]))
 
 (defn do! [cmd]
-  (osa/do! "DVD player" cmd))
+  (fn [_] (osa/do! "DVD player" cmd)))
 
-(defn set-audio! [word]
-  (try
-    (do! (str "set audio track to " (Integer. word)))
-    (catch Exception e
-      (speech/say! "audio track should be an integer."))))
+(defn play! [_]
+  (osa/do! "DVD player" "go to main menu")
+  (osa/do! "DVD player" "go to title menu")
+  (Thread/sleep 16000)
+  (osa/do! "DVD player" "press enter key"))
 
-(defn set-chapter! [word]
-  (try
-    (do! (str "set chapter to " (Integer. word)))
-    (catch Exception e
-      (speech/say! "chapter should be an integer."))))
-
-(defn set-fullscreen! [word]
-  (case word
-    "on"  (do! "set viewer full screen to true")
-    "off" (do! "set viewer full screen to false")
+(defn set-fullscreen! [[setting]]
+  (case setting
+    "on"  (osa/do! "DVD player" "set viewer full screen to true")
+    "off" (osa/do! "DVD player" "set viewer full screen to false")
     (speech/say! "please say on or off.")))
 
-(defn set-subtitle! [word]
-  (try
-    (do! (str "set subtitle to " (Integer. word)))
-    (catch Exception e
-      (speech/say! "subtitle should be an integer."))))
+(defn set-numeric! [setting]
+  (fn [[w]]
+    (try
+      (osa/do! "DVD player" (str "set " setting " to " (Integer. w)))
+      (catch Exception e
+        (speech/say! (str setting " should be an integer."))))))
 
 (def commands
-  [{:cmd ["dvd" "audio"]      :fn (fn [[w]] (set-audio! w))}
-   {:cmd ["dvd" "chapter"]    :fn (fn [[w]] (set-chapter! w))}
-   {:cmd ["dvd" "eject"]      :fn (fn [_] (do! "eject dvd"))}
-   {:cmd ["dvd" "enter"]      :fn (fn [_] (do! "press enter key"))}
-   {:cmd ["dvd" "fullscreen"] :fn (fn [[w]] (set-fullscreen! w))}
-   {:cmd ["dvd" "main"]       :fn (fn [_] (do! "go to main menu"))}
-   {:cmd ["dvd" "play"]       :fn (fn [_] (do! "play dvd"))}
-   {:cmd ["dvd" "quit"]       :fn (fn [_] (do! "quit"))}
-   {:cmd ["dvd" "stop"]       :fn (fn [_] (do! "pause dvd"))}
-   {:cmd ["dvd" "subtitle"]   :fn (fn [[w]] (set-subtitle! w))}
-   {:cmd ["dvd" "title"]      :fn (fn [_] (do! "go to title menu"))}])
+  [{:cmd ["dvd" "audio"]      :fn (set-numeric! "audio track")}
+   {:cmd ["dvd" "eject"]      :fn (do! "eject dvd")}
+   {:cmd ["dvd" "fullscreen"] :fn set-fullscreen!}
+   {:cmd ["dvd" "play"]       :fn play!}
+   {:cmd ["dvd" "quit"]       :fn (do! "quit")}
+   {:cmd ["dvd" "resume"]     :fn (do! "play dvd")}
+   {:cmd ["dvd" "stop"]       :fn (do! "pause dvd")}
+   {:cmd ["dvd" "subtitle"]   :fn (set-numeric! "subtitle")}])

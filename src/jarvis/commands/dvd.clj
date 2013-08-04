@@ -31,6 +31,6 @@
    {:prefix "dvd fullscreen" :fn (set-bool "viewer full screen")}
    {:prefix "dvd play"       :fn play}
    {:prefix "dvd quit"       :fn (tell-dvd "quit")}
-   {:prefix "dvd resume"     :fn (tell-dvd "play dvd")}
+   {:prefix "dvd start"      :fn (tell-dvd "play dvd")}
    {:prefix "dvd stop"       :fn (tell-dvd "pause dvd")}
    {:prefix "dvd subtitle"   :fn (set-int "subtitle")}])

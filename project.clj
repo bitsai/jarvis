@@ -1,7 +1,6 @@
 (defproject jarvis "0.1.0-SNAPSHOT"
   :dependencies [[clj-http "0.7.2"]
                  [clj-time "0.5.1"]
-                 [com.googlecode.soundlibs/jlayer "1.0.1-1"]
                  [org.clojure/clojure "1.5.1"]
                  [ring/ring-core "1.1.8"]
                  [ring/ring-jetty-adapter "1.1.8"]]

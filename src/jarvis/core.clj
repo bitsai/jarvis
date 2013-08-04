@@ -7,25 +7,28 @@
             [ring.adapter.jetty :as jetty]
             [ring.util.response :as resp]))
 
-(def commands
+(def all-commands
   (concat basic/commands
           dvd/commands
           spotify/commands))
 
-(defn exact-match? [s prefix]
-  (let [n (count prefix)]
-    (and (= prefix (->> s (take n) (apply str)))
-         (or (= n (count s))
-             (= \space (nth s n))))))
+(defn has-prefix? [s prefix]
+  (let [prefix-len (count prefix)]
+    ;; besides having the prefix, s should also either have the
+    ;; same length as prefix or have a space after prefix's end
+    ;; to avoid false matches like "println ..." with prefix "print"
+    (and (->> s (take prefix-len) (apply str) (= prefix))
+         (or (= prefix-len (count s))
+             (= \space (nth s prefix-len))))))
 
-(defn find-command [s]
+(defn find-command [s commands]
   (->> commands
-       (filter #(->> % :prefix (exact-match? s)))
+       (filter #(has-prefix? s (:prefix %)))
        (first)))
 
 (defn execute [s]
   (try
-    (let [cmd (find-command s)]
+    (let [cmd (find-command s all-commands)]
       (if-not cmd
         "Command not found."
         (->> s

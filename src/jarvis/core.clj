@@ -3,6 +3,7 @@
             [jarvis.commands.basic :as basic]
             [jarvis.commands.dvd :as dvd]
             [jarvis.commands.spotify :as spotify]
+            [jarvis.commands.wolfram :as wolfram]
             [jarvis.util :as util]
             [ring.adapter.jetty :as jetty]
             [ring.util.response :as resp]))
@@ -10,7 +11,8 @@
 (def all-commands
   (concat basic/commands
           dvd/commands
-          spotify/commands))
+          spotify/commands
+          wolfram/commands))
 
 (defn has-prefix? [s prefix]
   (let [prefix-len (count prefix)]

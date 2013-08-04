@@ -2,6 +2,7 @@
   :dependencies [[clj-http "0.7.2"]
                  [clj-time "0.5.1"]
                  [org.clojure/clojure "1.5.1"]
+                 [org.clojure/data.zip "0.1.1"]
                  [ring/ring-core "1.1.8"]
                  [ring/ring-jetty-adapter "1.1.8"]]
   :description "An imitation of Jarvis from Iron Man"

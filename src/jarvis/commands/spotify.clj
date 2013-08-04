@@ -1,47 +1,47 @@
 (ns jarvis.commands.spotify
   (:require [clj-http.client :as http]
             [clojure.string :as str]
-            [jarvis.osa :as osa]
-            [jarvis.speech :as speech]))
+            [jarvis.osascript :as osa]))
 
-(defn do! [cmd]
-  (fn [_] (osa/do! "Spotify" cmd)))
-
-(defn search [item query]
-  (-> (str "http://ws.spotify.com/search/1/" item ".json")
-      (http/get {:query-params {:q query} :as :json})
+(defn search [category s]
+  (-> (str "http://ws.spotify.com/search/1/" category ".json")
+      (http/get {:query-params {:q s} :as :json})
       (:body)
-      (get (keyword (str item "s")))))
+      (get (keyword (str category "s")))))
 
-(defn list-albums! [words]
-  (if-let [albums (seq (search "album" (str/join " " words)))]
-    (doseq [a (take 10 albums)]
-      (speech/say! (:name a)))
-    (speech/say! "no albums found.")))
+(defn search-albums [s]
+  (if-let [albums (seq (search "album" s))]
+    (->> (for [[i a] (map list (range) (take 5 albums))]
+           (str i ":" (:name a)))
+         (str/join ", "))
+    (throw (Exception. "No albums found."))))
 
-(defn play-album! [words]
-  (if-let [album (first (search "album" (str/join " " words)))]
-    (osa/do! "Spotify" (format "play track \"%s\"" (:href album)))
-    (speech/say! (str "album not found."))))
+(defn play-album [s]
+  (if-let [album (first (search "album" s))]
+    (osa/tell "Spotify" (str "play track \"" (:href album) "\""))
+    (throw (Exception. "Album not found."))))
 
-(defn play-track! [words]
-  (if-let [track (first (search "track" (str/join " " words)))]
+(defn play-track [s]
+  (if-let [track (first (search "track" s))]
     (do
-      (osa/do! "Spotify" (format "play track \"%s\" in context \"%s\""
-                                 (-> track :href)
-                                 (-> track :album :href)))
+      (osa/tell "Spotify" (format "play track \"%s\" in context \"%s\""
+                                  (-> track :href)
+                                  (-> track :album :href)))
       ;; HACK to fix repeat being disabled when playing a track
       (Thread/sleep 1000)
-      (osa/do! "Spotify" "set repeating to false")
-      (osa/do! "Spotify" "set repeating to true"))
-    (speech/say! (str "track not found."))))
+      (osa/tell "Spotify" "set repeating to false")
+      (osa/tell "Spotify" "set repeating to true"))
+    (throw (Exception. "Track not found."))))
+
+(defn tell-spotify [s]
+  (fn [_] (osa/tell "Spotify" s)))
 
 (def commands
-  [{:cmd ["spotify" "album"]    :fn play-album!}
-   {:cmd ["spotify" "artist"]   :fn list-albums!}
-   {:cmd ["spotify" "next"]     :fn (do! "next track")}
-   {:cmd ["spotify" "previous"] :fn (do! "previous track")}
-   {:cmd ["spotify" "quit"]     :fn (do! "quit")}
-   {:cmd ["spotify" "resume"]   :fn (do! "play")}
-   {:cmd ["spotify" "stop"]     :fn (do! "pause")}
-   {:cmd ["spotify" "track"]    :fn play-track!}])
+  [{:prefix "spotify album"    :fn play-album}
+   {:prefix "spotify artist"   :fn search-albums}
+   {:prefix "spotify next"     :fn (tell-spotify "next track")}
+   {:prefix "spotify previous" :fn (tell-spotify "previous track")}
+   {:prefix "spotify quit"     :fn (tell-spotify "quit")}
+   {:prefix "spotify start"    :fn (tell-spotify "play")}
+   {:prefix "spotify stop"     :fn (tell-spotify "pause")}
+   {:prefix "spotify track"    :fn play-track}])

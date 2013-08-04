@@ -1,35 +1,36 @@
 (ns jarvis.commands.dvd
-  (:require [jarvis.osa :as osa]
-            [jarvis.speech :as speech]))
+  (:require [jarvis.osascript :as osa]))
 
-(defn do! [cmd]
-  (fn [_] (osa/do! "DVD player" cmd)))
-
-(defn play! [_]
-  (osa/do! "DVD player" "go to main menu")
-  (osa/do! "DVD player" "go to title menu")
+(defn play [_]
+  (osa/tell "DVD player" "go to main menu")
+  (osa/tell "DVD player" "go to title menu")
   (Thread/sleep 16000)
-  (osa/do! "DVD player" "press enter key"))
+  (osa/tell "DVD player" "press enter key"))
 
-(defn set-fullscreen! [[setting]]
-  (case setting
-    "on"  (osa/do! "DVD player" "set viewer full screen to true")
-    "off" (osa/do! "DVD player" "set viewer full screen to false")
-    (speech/say! "please say on or off.")))
+(defn set-bool [setting]
+  (fn [s]
+    (if-not (#{"true" "false"} s)
+      (throw (Exception. (str setting " should be true or false.")))
+      (osa/tell "DVD player" (format "set %s to %s" setting s)))))
 
-(defn set-numeric! [setting]
-  (fn [[w]]
-    (try
-      (osa/do! "DVD player" (str "set " setting " to " (Integer. w)))
-      (catch Exception e
-        (speech/say! (str setting " should be an integer."))))))
+(defn set-int [setting]
+  (fn [s]
+    (let [msg (str setting " should be an integer.")
+          i (try
+              (Integer. s)
+              (catch Exception e
+                (throw (Exception. msg))))]
+      (osa/tell "DVD player" (format "set %s to %d" setting i)))))
+
+(defn tell-dvd [s]
+  (fn [_] (osa/tell "DVD player" s)))
 
 (def commands
-  [{:cmd ["dvd" "audio"]      :fn (set-numeric! "audio track")}
-   {:cmd ["dvd" "eject"]      :fn (do! "eject dvd")}
-   {:cmd ["dvd" "fullscreen"] :fn set-fullscreen!}
-   {:cmd ["dvd" "play"]       :fn play!}
-   {:cmd ["dvd" "quit"]       :fn (do! "quit")}
-   {:cmd ["dvd" "resume"]     :fn (do! "play dvd")}
-   {:cmd ["dvd" "stop"]       :fn (do! "pause dvd")}
-   {:cmd ["dvd" "subtitle"]   :fn (set-numeric! "subtitle")}])
+  [{:prefix "dvd audio"      :fn (set-int "audio track")}
+   {:prefix "dvd eject"      :fn (tell-dvd "eject dvd")}
+   {:prefix "dvd fullscreen" :fn (set-bool "viewer full screen")}
+   {:prefix "dvd play"       :fn play}
+   {:prefix "dvd quit"       :fn (tell-dvd "quit")}
+   {:prefix "dvd resume"     :fn (tell-dvd "play dvd")}
+   {:prefix "dvd stop"       :fn (tell-dvd "pause dvd")}
+   {:prefix "dvd subtitle"   :fn (set-int "subtitle")}])

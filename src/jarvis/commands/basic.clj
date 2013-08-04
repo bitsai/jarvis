@@ -1,19 +1,20 @@
 (ns jarvis.commands.basic
-  (:require [clojure.string :as str]
-            [jarvis.osa :as osa]
-            [jarvis.speech :as speech]))
+  (:require [jarvis.osascript :as osa]
+            [jarvis.util :as util]))
 
-(defn set-volume! [[vol]]
-  (try
-    (osa/do! (str "set volume output volume " (Integer. vol)))
-    (catch Exception e
-      (speech/say! "volume should be an integer between 0 and 100."))))
+(defn set-volume [s]
+  (let [msg "Volume should be an integer between 0 and 100."
+        v (try
+            (Integer. s)
+            (catch Exception e
+              (throw (Exception. msg))))]
+    (osa/run (str "set volume output volume " v))))
 
-(defn start-screensaver! [_]
-  (osa/do! "System Events" "start current screen saver"))
+(defn start-screensaver [_]
+  (osa/tell "System Events" "start current screen saver"))
 
 (def commands
-  [{:cmd ["print"]       :fn #(println (str/join " " %))}
-   {:cmd ["say"]         :fn #(speech/say! (str/join  " " %))}
-   {:cmd ["screensaver"] :fn start-screensaver!}
-   {:cmd ["volume"]      :fn set-volume!}])
+  [{:prefix "print"       :fn println}
+   {:prefix "say"         :fn util/say}
+   {:prefix "screensaver" :fn start-screensaver}
+   {:prefix "volume"      :fn set-volume}])

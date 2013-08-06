@@ -5,7 +5,7 @@
                  [org.clojure/data.zip "0.1.1"]
                  [ring/ring-core "1.1.8"]
                  [ring/ring-jetty-adapter "1.1.8"]]
-  :description "An imitation of Jarvis from Iron Man"
+  :description "Voice-driven remote control for applications."
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :main jarvis.core

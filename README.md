@@ -4,6 +4,8 @@ Voice-driven remote control for applications, inspired by Iron Man's Jarvis.
 
 Currently only runs under OSX.
 
+See https://github.com/bitsai/go-jarvis for an implementation in Go.
+
 ## Usage
 
 To start Jarvis in server mode:
@@ -49,6 +51,8 @@ To test a command in the terminal:
     spotify stop: stop playback
     spotify track <query>: search and play specified track
 
-### Wolfram Alpha
+### Wolfram Alpha*
 
     alpha <query>: answers query
+
+* To enable Wolfram Alpha queries, please fill in "appid" in line 10 of jarvis/commands/wolfram.clj.

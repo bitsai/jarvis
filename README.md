@@ -55,4 +55,4 @@ To test a command in the terminal:
 
     alpha <query>: answers query
 
-* To enable Wolfram Alpha queries, please fill in "appid" in line 10 of jarvis/commands/wolfram.clj.
+* To enable Wolfram Alpha queries, please fill in "appid" in line 10 of src/jarvis/commands/wolfram.clj.

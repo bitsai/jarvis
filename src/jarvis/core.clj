@@ -46,6 +46,7 @@
       (:body)
       (slurp)
       (execute)
+      (str "\n")
       (resp/response)))
 
 (defn -main [& args]

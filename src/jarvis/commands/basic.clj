@@ -3,7 +3,7 @@
             [jarvis.util :as util]))
 
 (defn set-volume [s]
-  (let [msg "Volume should be an integer between 0 and 100."
+  (let [msg "volume should be an integer between 0 and 100"
         v (try
             (Integer. s)
             (catch Exception e
@@ -14,7 +14,7 @@
   (osa/tell "System Events" "start current screen saver"))
 
 (def commands
-  [{:prefix "print"       :fn println}
+  [{:prefix "print"       :fn util/println}
    {:prefix "say"         :fn util/say}
    {:prefix "screensaver" :fn start-screensaver}
    {:prefix "volume"      :fn set-volume}])

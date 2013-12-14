@@ -10,12 +10,12 @@
 (defn set-bool [setting]
   (fn [s]
     (if-not (#{"true" "false"} s)
-      (throw (Exception. (str setting " should be true or false.")))
+      (throw (Exception. (str setting " should be true or false")))
       (osa/tell "DVD player" (format "set %s to %s" setting s)))))
 
 (defn set-int [setting]
   (fn [s]
-    (let [msg (str setting " should be an integer.")
+    (let [msg (str setting " should be an integer")
           i (try
               (Integer. s)
               (catch Exception e

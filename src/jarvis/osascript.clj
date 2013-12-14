@@ -3,7 +3,7 @@
 
 (defn run [s]
   (shell/sh "osascript" "-e" s)
-  nil)
+  "ok")
 
 (defn tell [app s]
   (run (format "tell application \"%s\" to %s" app s)))

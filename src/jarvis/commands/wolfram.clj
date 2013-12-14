@@ -7,34 +7,35 @@
             [clojure.zip :as zip]))
 
 (defn query [s]
-  (let [query-params {:input s
-                      :appid ""
-                      :format "plaintext"
-                      :podindex "1,2"}]
+  (let [query-params {:appid "" :input s :podindex "1,2"}]
     (-> "http://api.wolframalpha.com/v2/query"
         (http/get {:query-params query-params :as :stream})
-        (:body)
-        (xml/parse)
-        (zip/xml-zip))))
+        (:body))))
+
+(defn ->html [s]
+  (-> s
+      (str/replace "\n" "<br>")
+      (str/replace "°" "")))
 
 ;; use this because zf-xml/text snarfs newline characters
-(defn text [loc]
+(defn ->text [loc]
   (apply str (zf-xml/xml-> loc zf/descendants zip/node string?)))
 
-(defn clean [s]
-  (-> s
-      (str/replace "|" ",")
-      (str/replace "\n" ",\n")
-      (str/replace "°F" "° Fahrenheit")))
+(defn ->data [subpod]
+  (let [title (zf-xml/attr subpod :title)
+        text (-> subpod ->text ->html)]
+    (if (seq title)
+      (format "<b>%s</b><br>%s" title text)
+      text)))
 
-(defn ask [s]
-  (let [z (query s)
+(defn parse [body]
+  (let [z (-> body xml/parse zip/xml-zip)
         subpods (zf-xml/xml-> z :pod :subpod)]
     (if (seq subpods)
       (->> subpods
-           (mapcat (juxt (zf-xml/attr :title) (comp clean text)))
-           (str/join ",\n"))
-      (throw (Exception. "No answers found.")))))
+           (map ->data)
+           (str/join "<br>"))
+      (throw (Exception. "no results found")))))
 
-(def commands
-  [{:prefix "alpha" :fn ask}])
+(defn process [s]
+  (-> s query parse))

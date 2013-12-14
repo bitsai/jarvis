@@ -16,4 +16,4 @@ while True:
     output = urllib.urlopen(url, input).read()
   except Exception as e:
     output = str(e)
-    droid.eventPost("output", output)
+  droid.eventPost("output", output)

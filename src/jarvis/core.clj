@@ -15,13 +15,14 @@
 
 (defn process [s]
   (try
-    (if-let [cmd (util/find-command s all-commands)]
-      (->> s
-           (drop (count (:prefix cmd)))
-           (apply str)
-           (str/trim)
-           ((:fn cmd)))
-      (wolfram/process s))
+    (let [s (str/lower-case s)]
+      (if-let [cmd (util/find-command s all-commands)]
+        (->> s
+             (drop (count (:prefix cmd)))
+             (apply str)
+             (str/trim)
+             ((:fn cmd)))
+        (wolfram/process s)))
     (catch Throwable e
       (.getMessage e))))
 
@@ -34,7 +35,7 @@
       (resp/response)))
 
 (defn -main [& args]
-  (let [s (->> args (str/join " ") str/lower-case)]
+  (let [s (str/join " " args)]
     (if (seq s)
       (println (process s))
       (jetty/run-jetty handler {:port 8080}))))

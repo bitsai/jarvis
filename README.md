@@ -4,8 +4,6 @@ Voice-driven remote control for applications, inspired by Iron Man's Jarvis.
 
 Currently only runs under OSX.
 
-See https://github.com/bitsai/go-jarvis for an implementation in Go.
-
 ## Usage
 
 To start Jarvis in server mode:
@@ -24,17 +22,17 @@ To test a command in the terminal:
 
 ### Basic
 
-    print <words>: prints words in the terminal
-    say <words>: reads words out loud using OSX "say"
-    screensaver: starts screensaver
-    volume <integer between 0 and 100>: sets system volume
+    print <words>: print words in the terminal
+    say <words>: read words out loud using OSX "say"
+    screensaver: start screensaver
+    volume <integer between 0 and 100>: set system volume
 
 ### DVD
 
     dvd audio <integer>: select specified audio track
     dvd eject: eject DVD
-    dvd fullscreen <true|false>: enables/disables fullscreen mode
-    dvd play: skip any trailers, start playing DVD
+    dvd fullscreen <true|false>: enable/disable fullscreen mode
+    dvd play: skip trailers, start playing DVD
     dvd quit: quit DVD player
     dvd start: start playback
     dvd stop: stop playback
@@ -43,16 +41,19 @@ To test a command in the terminal:
 ### Spotify
 
     spotify album <query>: search and play specified album
-    spotify artist <query>: list top-5 popular albums for specified artist
+    spotify albums <query>: list top 5 album results for specified query
     spotify next: next track
     spotify previous: previous track
     spotify quit: quit Spotify
     spotify start: start playback
     spotify stop: stop playback
     spotify track <query>: search and play specified track
+    spotify tracks <query>: list top 5 track results for specified query
 
-### Wolfram Alpha*
+### Wolfram Alpha
 
-    alpha <query>: answers query
+* If no command is specified, a Wolfram Alpha query is performed.
+
+* Example queries: http://www.wolframalpha.com/examples/
 
 * To enable Wolfram Alpha queries, please fill in "appid" in line 10 of src/jarvis/commands/wolfram.clj.

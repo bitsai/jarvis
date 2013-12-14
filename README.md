@@ -6,17 +6,17 @@ Currently only runs under OSX.
 
 ## Usage
 
-To start Jarvis in server mode:
+Run a command in the terminal:
+
+    lein run print hello world
+
+Start Jarvis in server mode:
 
     lein run
 
 Commands are sent to the server using HTTP POST requests:
 
     curl localhost:8080 -d "print hello world"
-
-To test a command in the terminal:
-
-    lein run print hello world
 
 ## Commands
 

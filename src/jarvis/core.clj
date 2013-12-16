@@ -1,10 +1,10 @@
 (ns jarvis.core
-  (:require [clojure.string :as str]
+  (:require [clojure.stacktrace :as st]
+            [clojure.string :as str]
             [jarvis.commands.basic :as basic]
             [jarvis.commands.dvd :as dvd]
             [jarvis.commands.spotify :as spotify]
             [jarvis.commands.wolfram :as wolfram]
-            [jarvis.util :as util]
             [ring.adapter.jetty :as jetty]
             [ring.util.response :as resp]))
 
@@ -13,18 +13,25 @@
           dvd/commands
           spotify/commands))
 
+(defn match? [s {:keys [prefix] :as command}]
+  (let [prefix-len (count prefix)]
+    ;; besides having the prefix, s should also either have the same length
+    ;; as prefix or have a space after prefix's end to avoid false matches
+    ;; like string "println ..." with prefix "print".
+    (and (->> s (take prefix-len) (apply str) (= prefix))
+         (or (= prefix-len (count s))
+             (= \space (nth s prefix-len))))))
+
 (defn process [s]
-  (try
-    (let [s (str/lower-case s)]
-      (if-let [cmd (util/find-command s all-commands)]
-        (->> s
-             (drop (count (:prefix cmd)))
-             (apply str)
-             (str/trim)
-             ((:fn cmd)))
-        (wolfram/process s)))
-    (catch Throwable e
-      (.getMessage e))))
+  (let [s (str/lower-case s)]
+    (try
+      (if-let [{:keys [fun prefix]} (->> all-commands
+                                         (filter #(match? s %))
+                                         (first))]
+        (fun (-> s (subs (count prefix)) str/trim))
+        (wolfram/process s))
+      (catch Throwable t
+        (with-out-str (st/print-stack-trace t))))))
 
 (defn handler [req]
   (-> req
@@ -32,7 +39,8 @@
       (slurp)
       (process)
       (str "\n")
-      (resp/response)))
+      (resp/response)
+      (resp/charset "UTF-8")))
 
 (defn -main [& args]
   (let [s (str/join " " args)]

@@ -50,6 +50,8 @@ Commands are sent to the server using HTTP POST requests:
     spotify track <query>: play specified track
     spotify tracks <query>: list top 5 track results for specified query
 
+* Currently, queries only return US-available results. To change this, update the "country" var in src/jarvis/commands/spotify.clj.
+
 ### Wolfram Alpha
 
 * If no command is specified, a Wolfram Alpha query is performed.

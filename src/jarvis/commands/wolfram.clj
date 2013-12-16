@@ -7,35 +7,42 @@
             [clojure.zip :as zip]))
 
 (defn query [s]
-  (let [query-params {:appid "" :input s :podindex "1,2"}]
+  (let [query-params {:appid "" :format "plaintext" :input s}]
     (-> "http://api.wolframalpha.com/v2/query"
         (http/get {:query-params query-params :as :stream})
         (:body))))
 
-(defn ->html [s]
-  (-> s
-      (str/replace "\n" "<br>")
-      (str/replace "°" "")))
-
 ;; use this because zf-xml/text snarfs newline characters
-(defn ->text [loc]
-  (apply str (zf-xml/xml-> loc zf/descendants zip/node string?)))
+(defn ->text [z]
+  (apply str (zf-xml/xml-> z zf/descendants zip/node string?)))
 
-(defn ->data [subpod]
+(defn no-leading-newline [s]
+  (str/replace s #"^\n" ""))
+
+(defn parse-subpod [subpod]
   (let [title (zf-xml/attr subpod :title)
-        text (-> subpod ->text ->html)]
-    (if (seq title)
-      (format "<b>%s</b><br>%s" title text)
-      text)))
+        text (-> subpod ->text no-leading-newline)]
+    (when (seq text)
+      (if (seq title)
+        (str/join "\n" [title text])
+        text))))
 
-(defn parse [body]
+(defn parse-pod [pod]
+  (let [title (zf-xml/attr pod :title)
+        texts (->> (zf-xml/xml-> pod :subpod)
+                   (keep parse-subpod)
+                   (str/join "\n"))]
+    (when (seq texts)
+      (str/join "\n" [title texts]))))
+
+(defn parse-body [body]
   (let [z (-> body xml/parse zip/xml-zip)
-        subpods (zf-xml/xml-> z :pod :subpod)]
-    (if (seq subpods)
-      (->> subpods
-           (map ->data)
-           (str/join "<br>"))
-      (throw (Exception. "no results found")))))
+        pods (zf-xml/xml-> z :pod)]
+    (if (seq pods)
+      (->> pods
+           (keep parse-pod)
+           (str/join "\n\n"))
+      "no results found")))
 
 (defn process [s]
-  (-> s query parse))
+  (-> s query parse-body))

@@ -13,7 +13,8 @@ while True:
   if input == "exit":
     sys.exit()
   try:
-    output = urllib.urlopen(url, input).read()
+    r = urllib.urlopen(url, input)
+    output = r.read().replace("\n", "<br>")
   except Exception as e:
     output = str(e)
   droid.eventPost("output", output)

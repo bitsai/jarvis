@@ -42,7 +42,7 @@
              (format "%s [%s]"
                      (-> i :name)
                      (-> i :artists first :name)))
-           (str/join "\n"))
+           (str/join "\n\n"))
       "no items found")))
 
 (defn tell-spotify [s]

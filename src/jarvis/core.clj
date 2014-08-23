@@ -42,7 +42,8 @@
              (str "\n"))})
 
 (defn -main [& args]
-  (let [s (str/join " " args)]
-    (if (seq s)
-      (println (process s))
-      (server/run-server handler {:port 8080}))))
+  (if (seq args)
+    (println (process (str/join " " args)))
+    (do
+      (server/run-server handler {:port 8080})
+      (println "ready!"))))

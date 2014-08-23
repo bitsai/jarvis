@@ -1,12 +1,11 @@
 (ns jarvis.core
   (:require [clojure.stacktrace :as st]
             [clojure.string :as str]
+            [org.httpkit.server :as server]
             [jarvis.commands.basic :as basic]
             [jarvis.commands.dvd :as dvd]
             [jarvis.commands.spotify :as spotify]
-            [jarvis.commands.wolfram :as wolfram]
-            [ring.adapter.jetty :as jetty]
-            [ring.util.response :as resp]))
+            [jarvis.commands.wolfram :as wolfram]))
 
 (def all-commands
   (concat basic/commands
@@ -34,16 +33,16 @@
         (with-out-str (st/print-stack-trace t))))))
 
 (defn handler [req]
-  (-> req
-      (:body)
-      (slurp)
-      (process)
-      (str "\n")
-      (resp/response)
-      (resp/charset "UTF-8")))
+  {:status 200
+   :headers {"Content-Type" "text/html;charset=UTF-8"}
+   :body (-> req
+             (:body)
+             (slurp)
+             (process)
+             (str "\n"))})
 
 (defn -main [& args]
   (let [s (str/join " " args)]
     (if (seq s)
       (println (process s))
-      (jetty/run-jetty handler {:port 8080}))))
+      (server/run-server handler {:port 8080}))))

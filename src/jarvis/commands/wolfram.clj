@@ -4,14 +4,13 @@
             [clojure.string :as str]
             [clojure.xml :as xml]
             [clojure.zip :as zip]
+            [environ.core :as e]
             [org.httpkit.client :as http]))
 
-(def app-id "")
-
-(defn query [s]
-  (let [query-params {:appid app-id :format "plaintext" :input s}]
+(defn query [app-id s]
+  (let [params {:appid app-id :format "plaintext" :input s}]
     (-> "http://api.wolframalpha.com/v2/query"
-        (http/get {:query-params query-params :as :stream})
+        (http/get {:query-params params :as :stream})
         (deref)
         (:body))))
 
@@ -48,4 +47,7 @@
       "no results found")))
 
 (defn ask [s]
-  (-> s query parse-xml))
+  (let [app-id (e/env :app-id)]
+    (if (seq app-id)
+      (-> app-id (query s) parse-xml)
+      "Wolfram Alpha app id not found!")))

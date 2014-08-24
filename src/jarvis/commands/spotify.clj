@@ -1,10 +1,9 @@
 (ns jarvis.commands.spotify
   (:require [clojure.data.json :as json]
             [clojure.string :as str]
+            [environ.core :as e]
             [jarvis.osascript :as osa]
             [org.httpkit.client :as http]))
-
-(def country "US")
 
 (defn search [category s available?]
   (-> (format "http://ws.spotify.com/search/1/%s.json" category)
@@ -16,7 +15,7 @@
       (->> (filter available?))))
 
 (defn album-available? [a]
-  (->> a :availability :territories (re-find (re-pattern country))))
+  (->> a :availability :territories (re-find (re-pattern (e/env :country)))))
 
 (defn track-available? [t]
   (-> t :album album-available?))

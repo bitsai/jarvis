@@ -42,7 +42,7 @@ Browser testing:
     spotify track <query>: play specified track
     spotify tracks <query>: list top 5 track results for the query
 
-* Currently, queries only return US-available results. To change this, please update the "country" var in src/jarvis/commands/spotify.clj.
+* By default, queries only return results available in the US. To change this, please update :country in .lein-env.
 
 ### Wolfram Alpha
 
@@ -50,4 +50,4 @@ Browser testing:
 
 * Example queries: http://www.wolframalpha.com/examples/
 
-* To enable Wolfram Alpha queries, please fill in the "app-id" var in src/jarvis/commands/wolfram.clj.
+* To enable Wolfram Alpha queries, please fill in :app-id in .lein-env.

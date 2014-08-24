@@ -1,0 +1,3 @@
+{:app-id "" ;; Wolfram Alpha app id
+ :country "US" ;; Spotify country setting
+ }

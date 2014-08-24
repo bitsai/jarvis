@@ -29,14 +29,14 @@ Commands are sent to the server using HTTP POST requests:
 
 ### Spotify
 
-    spotify album <query>: play specified album
-    spotify albums <query>: list top 5 album results for specified query
     spotify next: next track
     spotify previous: previous track
     spotify start: start playback
     spotify stop: stop playback
+    spotify album <query>: play specified album
+    spotify albums <query>: list top 5 album results for the query
     spotify track <query>: play specified track
-    spotify tracks <query>: list top 5 track results for specified query
+    spotify tracks <query>: list top 5 track results for the query
 
 * Currently, queries only return US-available results. To change this, update the "country" var in src/jarvis/commands/spotify.clj.
 

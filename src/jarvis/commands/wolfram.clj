@@ -38,8 +38,8 @@
     (when (seq texts)
       (str/join "\n" [title texts]))))
 
-(defn parse-body [body]
-  (let [z (-> body xml/parse zip/xml-zip)
+(defn parse-xml [xml]
+  (let [z (-> xml xml/parse zip/xml-zip)
         pods (zf-xml/xml-> z :pod)]
     (if (seq pods)
       (->> pods
@@ -47,5 +47,5 @@
            (str/join "\n\n"))
       "no results found")))
 
-(defn process [s]
-  (-> s query parse-body))
+(defn ask [s]
+  (-> s query parse-xml))

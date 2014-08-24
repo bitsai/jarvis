@@ -6,13 +6,7 @@
 
 (def country "US")
 
-(defn album-available? [a]
-  (->> a :availability :territories (re-find (re-pattern country))))
-
-(defn track-available? [t]
-  (-> t :album album-available?))
-
-(defn query [category s available?]
+(defn search [category s available?]
   (-> (format "http://ws.spotify.com/search/1/%s.json" category)
       (http/get {:query-params {:q s}})
       (deref)
@@ -21,13 +15,19 @@
       (get (keyword (str category "s")))
       (->> (filter available?))))
 
+(defn album-available? [a]
+  (->> a :availability :territories (re-find (re-pattern country))))
+
+(defn track-available? [t]
+  (-> t :album album-available?))
+
 (defn play-album [s]
-  (if-let [album (first (query "album" s album-available?))]
+  (if-let [album (first (search "album" s album-available?))]
     (osa/tell "Spotify" (format "play track \"%s\"" (:href album)))
     "album not found"))
 
 (defn play-track [s]
-  (if-let [track (first (query "track" s track-available?))]
+  (if-let [track (first (search "track" s track-available?))]
     (do
       (osa/tell "Spotify" (format "play track \"%s\" in context \"%s\""
                                   (-> track :href)
@@ -38,9 +38,9 @@
       (osa/tell "Spotify" "set repeating to true"))
     "track not found"))
 
-(defn search [category available?]
+(defn query [category available?]
   (fn [s]
-    (if-let [items (seq (query category s available?))]
+    (if-let [items (seq (search category s available?))]
       (->> (for [i (take 5 items)]
              (format "%s [%s]"
                      (-> i :name)
@@ -57,6 +57,6 @@
    {:prefix "spotify start"    :fun (tell-spotify "play")}
    {:prefix "spotify stop"     :fun (tell-spotify "pause")}
    {:prefix "spotify album"    :fun play-album}
-   {:prefix "spotify albums"   :fun (search "album" album-available?)}
+   {:prefix "spotify albums"   :fun (query "album" album-available?)}
    {:prefix "spotify track"    :fun play-track}
-   {:prefix "spotify tracks"   :fun (search "track" track-available?)}])
+   {:prefix "spotify tracks"   :fun (query "track" track-available?)}])

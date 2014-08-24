@@ -1,8 +1,8 @@
 # Jarvis
 
-Voice-driven remote control for applications, inspired by Iron Man's Jarvis.
+Voice-driven interface for stuff, inspired by Iron Man's Jarvis.
 
-Currently only runs under OSX.
+Currently only runs on OSX.
 
 ## Usage
 
@@ -38,11 +38,11 @@ Commands are sent to the server using HTTP POST requests:
     spotify track <query>: play specified track
     spotify tracks <query>: list top 5 track results for the query
 
-* Currently, queries only return US-available results. To change this, update the "country" var in src/jarvis/commands/spotify.clj.
+* Currently, queries only return US-available results. To change this, please update the "country" var in src/jarvis/commands/spotify.clj.
 
 ### Wolfram Alpha
 
-* If no command is specified, a Wolfram Alpha query is performed.
+* If no command is specified, the inputs are treated as a Wolfram Alpha query.
 
 * Example queries: http://www.wolframalpha.com/examples/
 

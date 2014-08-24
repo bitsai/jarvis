@@ -26,7 +26,7 @@
                                          (filter #(match? s %))
                                          (first))]
         (fun (-> s (subs (count prefix)) str/trim))
-        (wolfram/process s))
+        (wolfram/ask s))
       (catch Throwable t
         (with-out-str (st/print-stack-trace t))))))
 

@@ -12,7 +12,7 @@
 
 (defn match? [words {:keys [prefix] :as cmd}]
   (->> words
-       (map str/lower-case words)
+       (map str/lower-case)
        (take (count prefix))
        (= prefix)))
 

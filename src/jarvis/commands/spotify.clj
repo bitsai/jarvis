@@ -56,7 +56,6 @@
    {:prefix "spotify albums"   :fun (search "album" album-available?)}
    {:prefix "spotify next"     :fun (tell-spotify "next track")}
    {:prefix "spotify previous" :fun (tell-spotify "previous track")}
-   {:prefix "spotify quit"     :fun (tell-spotify "quit")}
    {:prefix "spotify start"    :fun (tell-spotify "play")}
    {:prefix "spotify stop"     :fun (tell-spotify "pause")}
    {:prefix "spotify track"    :fun play-track}

@@ -7,7 +7,7 @@
             [org.httpkit.server :as server]
             [ring.middleware.params :as params]))
 
-(def all-commands
+(def commands
   (concat basic/commands
           spotify/commands))
 
@@ -19,22 +19,22 @@
 
 (defn process [s]
   (let [words (str/split s #"\s+")]
-    (try
-      (if-let [{:keys [prefix f]} (->> all-commands
-                                       (filter #(match? words %))
-                                       (first))]
-        (f (->> words (drop (count prefix)) (str/join " ")))
-        (wolfram/ask s))
-      (catch Throwable t
-        (with-out-str (st/print-stack-trace t))))))
+    (if-let [{:keys [prefix f]} (->> commands
+                                     (filter #(match? words %))
+                                     (first))]
+      (f (->> words (drop (count prefix)) (str/join " ")))
+      (wolfram/ask s))))
 
 (defn handler [req]
   {:status 200
    :headers {"Content-Type" "text/html;charset=UTF-8"}
-   :body (-> req
-             (:params)
-             (get "input")
-             (process)
+   :body (-> (try
+               (-> req
+                   (:params)
+                   (get "input")
+                   (process))
+               (catch Throwable t
+                 (with-out-str (st/print-stack-trace t))))
              (str "\n"))})
 
 (defn -main [& args]

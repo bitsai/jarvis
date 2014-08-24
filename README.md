@@ -46,4 +46,4 @@ Commands are sent to the server using HTTP POST requests:
 
 * Example queries: http://www.wolframalpha.com/examples/
 
-* To enable Wolfram Alpha queries, please fill in "appid" in line 10 of src/jarvis/commands/wolfram.clj.
+* To enable Wolfram Alpha queries, please fill in the "app-id" var in src/jarvis/commands/wolfram.clj.

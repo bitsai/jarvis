@@ -6,8 +6,10 @@
             [clojure.zip :as zip]
             [org.httpkit.client :as http]))
 
+(def app-id "")
+
 (defn query [s]
-  (let [query-params {:appid "" :format "plaintext" :input s}]
+  (let [query-params {:appid app-id :format "plaintext" :input s}]
     (-> "http://api.wolframalpha.com/v2/query"
         (http/get {:query-params query-params :as :stream})
         (deref)

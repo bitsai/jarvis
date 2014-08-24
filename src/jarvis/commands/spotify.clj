@@ -52,11 +52,11 @@
   (fn [_] (osa/tell "Spotify" s)))
 
 (def commands
-  [{:prefix "spotify next"     :fun (tell-spotify "next track")}
-   {:prefix "spotify previous" :fun (tell-spotify "previous track")}
-   {:prefix "spotify start"    :fun (tell-spotify "play")}
-   {:prefix "spotify stop"     :fun (tell-spotify "pause")}
-   {:prefix "spotify album"    :fun play-album}
-   {:prefix "spotify albums"   :fun (query "album" album-available?)}
-   {:prefix "spotify track"    :fun play-track}
-   {:prefix "spotify tracks"   :fun (query "track" track-available?)}])
+  [{:prefix ["spotify" "next"]     :f (tell-spotify "next track")}
+   {:prefix ["spotify" "previous"] :f (tell-spotify "previous track")}
+   {:prefix ["spotify" "start"]    :f (tell-spotify "play")}
+   {:prefix ["spotify" "stop"]     :f (tell-spotify "pause")}
+   {:prefix ["spotify" "album"]    :f play-album}
+   {:prefix ["spotify" "albums"]   :f (query "album" album-available?)}
+   {:prefix ["spotify" "track"]    :f play-track}
+   {:prefix ["spotify" "tracks"]   :f (query "track" track-available?)}])

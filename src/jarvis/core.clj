@@ -10,22 +10,19 @@
   (concat basic/commands
           spotify/commands))
 
-(defn match? [s {:keys [prefix] :as command}]
-  (let [prefix-len (count prefix)]
-    ;; besides having the prefix, s should also either have the same length
-    ;; as prefix or have a space after prefix's end to avoid false matches
-    ;; like string "println ..." with prefix "print".
-    (and (->> s (take prefix-len) (apply str) (= prefix))
-         (or (= prefix-len (count s))
-             (= \space (nth s prefix-len))))))
+(defn match? [words {:keys [prefix] :as cmd}]
+  (->> words
+       (map str/lower-case words)
+       (take (count prefix))
+       (= prefix)))
 
 (defn process [s]
-  (let [s (str/lower-case s)]
+  (let [words (str/split s #"\s+")]
     (try
-      (if-let [{:keys [fun prefix]} (->> all-commands
-                                         (filter #(match? s %))
-                                         (first))]
-        (fun (-> s (subs (count prefix)) str/trim))
+      (if-let [{:keys [prefix f]} (->> all-commands
+                                       (filter #(match? words %))
+                                       (first))]
+        (f (->> words (drop (count prefix)) (str/join " ")))
         (wolfram/ask s))
       (catch Throwable t
         (with-out-str (st/print-stack-trace t))))))
@@ -41,7 +38,7 @@
 
 (defn -main [& args]
   (if (seq args)
-    (println (process (str/join " " args)))
+    (->> args (str/join " ") process println)
     (do
       (server/run-server handler {:port 8080})
       (println "ready!"))))

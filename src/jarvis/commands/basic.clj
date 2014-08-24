@@ -11,7 +11,7 @@
   "ok")
 
 (defn set-volume [s]
-  (if-let [v (try (Integer. s) (catch Throwable t))]
+  (if-let [v (try (Long. s) (catch Throwable t))]
     (osa/exec (format "set volume output volume %d" v))
     (format "volume should be an integer between 0 and 100")))
 
@@ -19,7 +19,7 @@
   (osa/tell "System Events" "start current screen saver"))
 
 (def commands
-  [{:prefix "print"       :fun print*}
-   {:prefix "say"         :fun say}
-   {:prefix "screensaver" :fun start-screensaver}
-   {:prefix "volume"      :fun set-volume}])
+  [{:prefix ["print"]       :f print*}
+   {:prefix ["say"]         :f say}
+   {:prefix ["screensaver"] :f start-screensaver}
+   {:prefix ["volume"]      :f set-volume}])

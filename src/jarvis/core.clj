@@ -4,7 +4,8 @@
             [jarvis.commands.basic :as basic]
             [jarvis.commands.spotify :as spotify]
             [jarvis.commands.wolfram :as wolfram]
-            [org.httpkit.server :as server]))
+            [org.httpkit.server :as server]
+            [ring.middleware.params :as params]))
 
 (def all-commands
   (concat basic/commands
@@ -31,8 +32,8 @@
   {:status 200
    :headers {"Content-Type" "text/html;charset=UTF-8"}
    :body (-> req
-             (:body)
-             (slurp)
+             (:params)
+             (get "input")
              (process)
              (str "\n"))})
 
@@ -40,5 +41,5 @@
   (if (seq args)
     (->> args (str/join " ") process println)
     (do
-      (server/run-server handler {:port 8080})
+      (server/run-server (params/wrap-params handler) {:port 8080})
       (println "ready!"))))

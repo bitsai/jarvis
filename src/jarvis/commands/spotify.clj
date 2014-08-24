@@ -1,7 +1,7 @@
 (ns jarvis.commands.spotify
   (:require [clojure.data.json :as json]
             [clojure.string :as str]
-            [jarvis.util :as util]
+            [jarvis.osascript :as osa]
             [org.httpkit.client :as http]))
 
 (def country "US")
@@ -23,19 +23,19 @@
 
 (defn play-album [s]
   (if-let [album (first (query "album" s album-available?))]
-    (util/tell "Spotify" (format "play track \"%s\"" (:href album)))
+    (osa/tell "Spotify" (format "play track \"%s\"" (:href album)))
     "album not found"))
 
 (defn play-track [s]
   (if-let [track (first (query "track" s track-available?))]
     (do
-      (util/tell "Spotify" (format "play track \"%s\" in context \"%s\""
+      (osa/tell "Spotify" (format "play track \"%s\" in context \"%s\""
                                   (-> track :href)
                                   (-> track :album :href)))
       ;; HACK to fix repeat being disabled when playing a track
       (Thread/sleep 1000)
-      (util/tell "Spotify" "set repeating to false")
-      (util/tell "Spotify" "set repeating to true"))
+      (osa/tell "Spotify" "set repeating to false")
+      (osa/tell "Spotify" "set repeating to true"))
     "track not found"))
 
 (defn search [category available?]
@@ -49,7 +49,7 @@
       "no items found")))
 
 (defn tell-spotify [s]
-  (fn [_] (util/tell "Spotify" s)))
+  (fn [_] (osa/tell "Spotify" s)))
 
 (def commands
   [{:prefix "spotify album"    :fun play-album}

@@ -22,8 +22,8 @@ Commands are sent to the server using HTTP POST requests:
 
 ### Basic
 
-    print <words>: print words in the terminal
-    say <words>: read words out loud using OSX "say"
+    print <inputs>: print inputs in the terminal
+    say <inputs>: read inputs aloud using OSX "say"
     screensaver: start screensaver
     volume <integer between 0 and 100>: set system volume
 

@@ -14,7 +14,7 @@
 
 (defn query [category s available?]
   (-> (format "http://ws.spotify.com/search/1/%s.json" category)
-      (http/get {:query-params {"q" s}})
+      (http/get {:query-params {:q s}})
       (deref)
       (:body)
       (json/read-str :key-fn keyword)

@@ -27,17 +27,6 @@ Commands are sent to the server using HTTP POST requests:
     screensaver: start screensaver
     volume <integer between 0 and 100>: set system volume
 
-### DVD
-
-    dvd audio <integer>: select specified audio track
-    dvd eject: eject DVD
-    dvd fullscreen <true|false>: enable/disable fullscreen mode
-    dvd play: skip trailers, start playing DVD
-    dvd quit: quit DVD player
-    dvd start: start playback
-    dvd stop: stop playback
-    dvd subtitle <integer>: select specified subtitle
-
 ### Spotify
 
     spotify album <query>: play specified album

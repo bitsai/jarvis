@@ -1,15 +1,13 @@
 (ns jarvis.core
   (:require [clojure.stacktrace :as st]
             [clojure.string :as str]
-            [org.httpkit.server :as server]
             [jarvis.commands.basic :as basic]
-            [jarvis.commands.dvd :as dvd]
             [jarvis.commands.spotify :as spotify]
-            [jarvis.commands.wolfram :as wolfram]))
+            [jarvis.commands.wolfram :as wolfram]
+            [org.httpkit.server :as server]))
 
 (def all-commands
   (concat basic/commands
-          dvd/commands
           spotify/commands))
 
 (defn match? [s {:keys [prefix] :as command}]

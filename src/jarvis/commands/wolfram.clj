@@ -1,15 +1,16 @@
 (ns jarvis.commands.wolfram
-  (:require [clj-http.client :as http]
-            [clojure.data.zip :as zf]
+  (:require [clojure.data.zip :as zf]
             [clojure.data.zip.xml :as zf-xml]
             [clojure.string :as str]
             [clojure.xml :as xml]
-            [clojure.zip :as zip]))
+            [clojure.zip :as zip]
+            [org.httpkit.client :as http]))
 
 (defn query [s]
   (let [query-params {:appid "" :format "plaintext" :input s}]
     (-> "http://api.wolframalpha.com/v2/query"
         (http/get {:query-params query-params :as :stream})
+        (deref)
         (:body))))
 
 ;; use this because zf-xml/text snarfs newline characters

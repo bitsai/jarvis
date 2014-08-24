@@ -1,7 +1,8 @@
 (ns jarvis.commands.spotify
-  (:require [clj-http.client :as http]
+  (:require [clojure.data.json :as json]
             [clojure.string :as str]
-            [jarvis.util :as util]))
+            [jarvis.util :as util]
+            [org.httpkit.client :as http]))
 
 (def country "US")
 
@@ -13,8 +14,10 @@
 
 (defn query [category s available?]
   (-> (format "http://ws.spotify.com/search/1/%s.json" category)
-      (http/get {:query-params {:q s} :as :json})
+      (http/get {:query-params {"q" s}})
+      (deref)
       (:body)
+      (json/read-str :key-fn keyword)
       (get (keyword (str category "s")))
       (->> (filter available?))))
 

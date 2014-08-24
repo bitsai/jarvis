@@ -33,7 +33,6 @@ Commands are sent to the server using HTTP POST requests:
     spotify albums <query>: list top 5 album results for specified query
     spotify next: next track
     spotify previous: previous track
-    spotify quit: quit Spotify
     spotify start: start playback
     spotify stop: stop playback
     spotify track <query>: play specified track

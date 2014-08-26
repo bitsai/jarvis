@@ -6,10 +6,11 @@
             [environ.core :as e]
             [org.httpkit.client :as http]))
 
-(defn query [app-id s]
-  (let [params {:appid app-id :format "image" :input s}]
+(defn query [s & [app-id]]
+  (let [app-id (or app-id (-> e/env :wolfram-alpha :app-id))]
     (-> "http://api.wolframalpha.com/v2/query"
-        (http/get {:query-params params :as :stream})
+        (http/get {:query-params {:appid app-id :format "image" :input s}
+                   :as :stream})
         (deref)
         (:body))))
 
@@ -37,5 +38,4 @@
      :else         ["no results found"])))
 
 (defn ask [s]
-  (let [app-id (-> e/env :wolfram-alpha :app-id)]
-    (->> s (query app-id) parse-xml (str/join "<br><br>"))))
+  (->> s query parse-xml (str/join "<br><br>")))

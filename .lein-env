@@ -1,3 +1,2 @@
-{:app-id "" ;; Wolfram Alpha app id
- :country "US" ;; Spotify country setting
- }
+{:spotify {:country "US"}
+ :wolfram-alpha {:app-id ""}}

@@ -37,4 +37,5 @@
      :else         ["no results found"])))
 
 (defn ask [s]
-  (->> s (query (e/env :app-id)) parse-xml (str/join "<br><br>")))
+  (let [app-id (-> e/env :wolfram-alpha :app-id)]
+    (->> s (query app-id) parse-xml (str/join "<br><br>"))))

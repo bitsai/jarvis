@@ -15,7 +15,8 @@
       (->> (filter available?))))
 
 (defn album-available? [a]
-  (->> a :availability :territories (re-find (re-pattern (e/env :country)))))
+  (let [country (-> e/env :spotify :country)]
+    (->> a :availability :territories (re-find (re-pattern country)))))
 
 (defn track-available? [t]
   (-> t :album album-available?))

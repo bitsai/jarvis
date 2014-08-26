@@ -1,2 +1,4 @@
-{:spotify {:country "US"}
+{:spotify {:client-id ""
+           :client-secret ""
+           :country "US"}
  :wolfram-alpha {:app-id ""}}

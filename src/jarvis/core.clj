@@ -22,7 +22,8 @@
     (if-let [{:keys [prefix f]} (->> commands
                                      (filter #(match? words %))
                                      (first))]
-      (f (->> words (drop (count prefix)) (str/join " ")))
+      (f (when-let [xs (->> words (drop (count prefix)) seq)]
+           (str/join " " xs)))
       (wolfram/ask s))))
 
 (defn handler [req]

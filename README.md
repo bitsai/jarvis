@@ -39,10 +39,13 @@ Browser testing:
     spotify stop: stop playback
     spotify album <query>: play specified album
     spotify albums <query>: list top 5 album results for the query
+    spotify playlists <user>: list playlists for user (defaults to .lein-env :user)
     spotify track <query>: play specified track
     spotify tracks <query>: list top 5 track results for the query
 
 * By default, queries only return results available in the US. To change this, please update :country in .lein-env.
+
+* To enable playlist searches, please fill in :client-id and :client-secret in .lein-env.
 
 ### Wolfram Alpha
 

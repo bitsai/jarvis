@@ -5,7 +5,7 @@
             [jarvis.commands.spotify :as spotify]
             [jarvis.commands.wolfram :as wolfram]
             [org.httpkit.server :as server]
-            [ring.middleware.params :as params]))
+            [ring.middleware.multipart-params :as mp]))
 
 (def commands
   (concat basic/commands
@@ -42,5 +42,5 @@
   (if (seq args)
     (->> args (str/join " ") process println)
     (do
-      (server/run-server (params/wrap-params handler) {:port 8080})
+      (server/run-server (mp/wrap-multipart-params handler) {:port 8080})
       (println "ready!"))))

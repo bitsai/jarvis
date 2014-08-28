@@ -16,7 +16,7 @@ Start Jarvis in server mode:
 
 Commands are sent to the server using HTTP requests:
 
-    curl localhost:8080 -data-urlencode input="print hello world"
+    curl localhost:8080 -F "input=print hello world"
 
 Browser testing:
 

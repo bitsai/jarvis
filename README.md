@@ -14,7 +14,7 @@ Start Jarvis in server mode:
 
     lein run
 
-Opening the interface in the browser:
+Open the interface in the browser:
 
     localhost:8080
 
@@ -34,10 +34,10 @@ Opening the interface in the browser:
     spotify start: start playback
     spotify stop: stop playback
     spotify album <query>: play specified album
-    spotify albums <query>: list top 5 album results for the query
+    spotify albums <query>: list top album results for the query
     spotify playlists <user>: list playlists for user (defaults to .lein-env :user)
     spotify track <query>: play specified track
-    spotify tracks <query>: list top 5 track results for the query
+    spotify tracks <query>: list top track results for the query
 
 * By default, queries only return results available in the US. To change this, please update :country in .lein-env.
 

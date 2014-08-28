@@ -67,7 +67,7 @@
 (defn query [category available?]
   (fn [s]
     (if-let [items (seq (search category s available?))]
-      (for [i (take 5 items)]
+      (for [i items]
         (format "%s [%s]"
                 (-> i :name)
                 (-> i :artists first :name)))

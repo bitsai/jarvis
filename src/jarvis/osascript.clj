@@ -3,7 +3,7 @@
 
 (defn exec [s]
   (shell/sh "osascript" "-e" s)
-  "ok")
+  ["ok"])
 
 (defn tell [app s]
   (exec (format "tell application \"%s\" to %s" app s)))

@@ -14,13 +14,9 @@ Start Jarvis in server mode:
 
     lein run
 
-Commands are sent to the server using HTTP requests:
+Opening the interface in the browser:
 
-    curl localhost:8080 -F "input=print hello world"
-
-Browser testing:
-
-    localhost:8080/?input=print hello world
+    localhost:8080
 
 ## Commands
 

@@ -4,16 +4,16 @@
 
 (defn print* [s]
   (println s)
-  "ok")
+  ["ok"])
 
 (defn say [s]
   (shell/sh "say" s)
-  "ok")
+  ["ok"])
 
 (defn set-volume [s]
   (if-let [v (try (Long. s) (catch Throwable t))]
     (osa/exec (format "set volume output volume %d" v))
-    (format "volume should be an integer between 0 and 100")))
+    [(format "volume should be an integer between 0 and 100")]))
 
 (defn start-screensaver [_]
   (osa/tell "System Events" "start current screen saver"))

@@ -1,6 +1,5 @@
 (ns jarvis.commands.wolfram
   (:require [clojure.data.zip.xml :as zf-xml]
-            [clojure.string :as str]
             [clojure.xml :as xml]
             [clojure.zip :as zip]
             [environ.core :as e]
@@ -38,4 +37,4 @@
      :else         ["no results found"])))
 
 (defn ask [s]
-  (->> s query parse-xml (str/join "<br><br>")))
+  (->> s query parse-xml))

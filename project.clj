@@ -1,5 +1,6 @@
 (defproject jarvis "0.1.0-SNAPSHOT"
   :dependencies [[environ "1.0.0"]
+                 [hiccup "1.0.5"]
                  [http-kit "2.1.18"]
                  [javax.servlet/servlet-api "2.5"]
                  [org.clojure/clojure "1.5.1"]

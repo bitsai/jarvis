@@ -1,6 +1,5 @@
 (ns jarvis.commands.spotify
   (:require [clojure.data.json :as json]
-            [clojure.string :as str]
             [environ.core :as e]
             [jarvis.osascript :as osa]
             [org.httpkit.client :as http]))
@@ -11,10 +10,12 @@
 (defn get-token [& [client-id client-secret]]
   (let [client-id (or client-id (-> e/env :spotify :client-id))
         client-secret (or client-secret (-> e/env :spotify :client-secret))
-        encoded (base64-encode (str client-id ":" client-secret))]
+        auth (->> (str client-id ":" client-secret)
+                  (base64-encode)
+                  (format "Basic %s"))]
     (-> "https://accounts.spotify.com/api/token"
         (http/post {:form-params {:grant_type "client_credentials"}
-                    :headers {"Authorization" (format "Basic %s" encoded)}})
+                    :headers {"Authorization" auth}})
         (deref)
         (:body)
         (json/read-str :key-fn keyword)
@@ -22,16 +23,18 @@
 
 (defn user-playlists [& [user]]
   (let [user (or user (-> e/env :spotify :user))
-        token (get-token)]
-    (-> "https://api.spotify.com/v1/users/%s/playlists"
-        (format user)
-        (http/get {:headers {"Authorization" (format "Bearer %s" token)}})
-        (deref)
-        (:body)
-        (json/read-str :key-fn keyword)
-        (:items)
-        (->> (map #(format "%s<br>%s" (:name %) (:href %)))
-             (str/join "<br><br>")))))
+        auth (format "Bearer %s" (get-token))
+        items (-> "https://api.spotify.com/v1/users/%s/playlists"
+                  (format user)
+                  (http/get {:headers {"Authorization" auth}})
+                  (deref)
+                  (:body)
+                  (json/read-str :key-fn keyword)
+                  (:items))]
+    (if (seq items)
+      (for [i items]
+        (format "%s<br>%s" (:name i) (:href i)))
+      ["no playlists found"])))
 
 (defn search [category s available?]
   (-> (format "http://ws.spotify.com/search/1/%s.json" category)
@@ -52,24 +55,23 @@
 (defn play-album [s]
   (if-let [album (first (search "album" s album-available?))]
     (osa/tell "Spotify" (format "play track \"%s\"" (:href album)))
-    "album not found"))
+    ["album not found"]))
 
 (defn play-track [s]
   (if-let [track (first (search "track" s track-available?))]
     (osa/tell "Spotify" (format "play track \"%s\" in context \"%s\""
                                 (-> track :href)
                                 (-> track :album :href)))
-    "track not found"))
+    ["track not found"]))
 
 (defn query [category available?]
   (fn [s]
     (if-let [items (seq (search category s available?))]
-      (->> (for [i (take 5 items)]
-             (format "%s [%s]"
-                     (-> i :name)
-                     (-> i :artists first :name)))
-           (str/join "\n\n"))
-      "no items found")))
+      (for [i (take 5 items)]
+        (format "%s [%s]"
+                (-> i :name)
+                (-> i :artists first :name)))
+      ["no items found"])))
 
 (defn tell-spotify [s]
   (fn [_] (osa/tell "Spotify" s)))

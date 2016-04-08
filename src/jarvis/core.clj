@@ -6,8 +6,9 @@
             [hiccup.element :refer [javascript-tag]]
             [hiccup.form :refer [form-to hidden-field]]
             [jarvis.commands.core :as cmd]
-            [ring.adapter.jetty :as j]
-            [ring.middleware.params :as p]))
+            [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.reload :refer [wrap-reload]]))
 
 (defn render [input output]
   (html (form-to [:get "/"]
@@ -19,9 +20,9 @@
                   "Listen"])
         (when input
           (format "INPUT: %s" input))
-        [:br]
-        [:br]
-        output
+        (repeat 2 [:br])
+        (when output
+          (str/replace output "\n" "<br>"))
         (javascript-tag (-> "jarvis.js" (io/resource) (slurp)))))
 
 (defn handler [req]
@@ -30,7 +31,7 @@
                  (try
                    (cmd/process input)
                    (catch Throwable t
-                     [(with-out-str (st/print-stack-trace t))])))]
+                     (with-out-str (st/print-stack-trace t)))))]
     {:status 200
      :headers {"Content-Type" "text/html; charset=utf-8"}
      :body (render input output)}))
@@ -38,4 +39,4 @@
 (defn -main [& args]
   (if (seq args)
     (->> args (str/join " ") cmd/process println)
-    (j/run-jetty (p/wrap-params handler) {:port 3000})))
+    (run-jetty (-> handler wrap-params wrap-reload) {:port 3000})))

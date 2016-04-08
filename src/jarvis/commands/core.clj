@@ -2,8 +2,7 @@
   (:refer-clojure :exclude [run!])
   (:require [clojure.string :as str]
             [jarvis.commands.basic :as basic]
-            [jarvis.commands.spotify :as spotify]
-            [jarvis.commands.wolfram :as wolfram]))
+            [jarvis.commands.spotify :as spotify]))
 
 (def commands
   [;; basic
@@ -31,4 +30,4 @@
 (defn run! [input]
   (if-let [[f args] (some (partial match input) commands)]
     (f args)
-    (wolfram/ask! input)))
+    "TODO: Google search"))

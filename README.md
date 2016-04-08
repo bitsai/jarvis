@@ -29,7 +29,7 @@ Open the interface in the browser:
 
 ### Spotify
 
-    find playlists <user> (defaults to :user in .lein-env)
+    find playlists <user> (defaults to .lein-env :spotify :user)
     play playlist <name>
     find albums <query>
     play album <query>
@@ -40,14 +40,14 @@ Open the interface in the browser:
     play
     pause
 
-* By default, searches only return results available in the US. To change this, change :country :country in .lein-env.
+* By default, searches only return results available in the US. To change this, change .lein-env :spotify :country.
 
-* To enable playlist searches, please fill in :client-id and :client-secret in .lein-env.
+* To enable playlist searches, please fill in :lein-env :spotify :client-id and :client-secret.
 
-### Wolfram Alpha
+### Google search
 
-* If no command is specified, the inputs are treated as a Wolfram Alpha query.
+* If no command is given, the input is treated as a Google search.
 
-* Example queries: http://www.wolframalpha.com/examples/
+* Requires Google Custom Search engine (http://stackoverflow.com/questions/4082966/what-are-the-alternatives-now-that-the-google-web-search-api-has-been-deprecated).
 
-* To enable Wolfram Alpha queries, please fill in :app-id in .lein-env.
+* To enable Google search, please fill in .lein-env :google :api-key and :search-engine-id.

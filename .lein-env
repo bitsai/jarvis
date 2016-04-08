@@ -1,5 +1,6 @@
-{:spotify {:client-id ""
+{:google {:api-key ""
+          :search-engine-id ""}
+ :spotify {:client-id ""
            :client-secret ""
            :country "US"
-           :user ""}
- :wolfram-alpha {:app-id ""}}
+           :user ""}}

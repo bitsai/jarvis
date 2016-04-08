@@ -1,46 +1,39 @@
 (ns jarvis.core
-  (:require [clojure.stacktrace :as st]
+  (:require [clojure.java.io :as io]
+            [clojure.stacktrace :as st]
             [clojure.string :as str]
-            [jarvis.commands.basic :as basic]
-            [jarvis.commands.spotify :as spotify]
-            [jarvis.commands.wolfram :as wolfram]
-            [jarvis.html :as html]
+            [hiccup.core :as h]
+            [hiccup.element :as he]
+            [hiccup.form :as hf]
+            [jarvis.commands.core :as commands]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]))
 
-(def commands
-  (concat basic/commands
-          spotify/commands))
-
-(defn match? [tokens {:keys [prefix] :as cmd}]
-  (->> tokens
-       (map str/lower-case)
-       (take (count prefix))
-       (= prefix)))
-
-(defn process [s]
-  (let [tokens (str/split s #"\s+")]
-    (if-let [{:keys [prefix f]} (->> commands
-                                     (filter #(match? tokens %))
-                                     (first))]
-      (f (when-let [xs (->> tokens (drop (count prefix)) seq)]
-           (str/join " " xs)))
-      (wolfram/ask s))))
+(defn render [outputs]
+  (h/html (hf/form-to [:post "/"]
+                      (hf/text-field "input")
+                      (hf/submit-button "Submit")
+                      [:button
+                       {:id "listen"
+                        :onclick "recognize()"
+                        :type "button"}
+                       "Listen"])
+          (interpose "<br><br>" outputs)
+          (he/javascript-tag (-> "jarvis.js"
+                                 (io/resource)
+                                 (slurp)))))
 
 (defn handler [req]
-  (let [input (-> req
-                  (:params)
-                  (get "input"))
-        outputs (when input
+  (let [outputs (when-let [input (-> req :params (get "input"))]
                  (try
-                   (process input)
+                   (commands/process input)
                    (catch Throwable t
                      [(with-out-str (st/print-stack-trace))])))]
     {:status 200
      :headers {"Content-Type" "text/html; charset=utf-8"}
-     :body (html/render outputs)}))
+     :body (render outputs)}))
 
 (defn -main [& args]
   (if (seq args)
-    (->> args (str/join " ") process println)
+    (->> args (str/join " ") commands/process println)
     (run-jetty (wrap-params handler) {:port 3000})))

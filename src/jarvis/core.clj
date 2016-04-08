@@ -2,38 +2,40 @@
   (:require [clojure.java.io :as io]
             [clojure.stacktrace :as st]
             [clojure.string :as str]
-            [hiccup.core :as h]
-            [hiccup.element :as he]
-            [hiccup.form :as hf]
-            [jarvis.commands.core :as commands]
-            [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.params :refer [wrap-params]]))
+            [hiccup.core :refer [html]]
+            [hiccup.element :refer [javascript-tag]]
+            [hiccup.form :refer [form-to hidden-field]]
+            [jarvis.commands.core :as cmd]
+            [ring.adapter.jetty :as j]
+            [ring.middleware.params :as p]))
 
-(defn render [outputs]
-  (h/html (hf/form-to [:post "/"]
-                      (hf/text-field "input")
-                      (hf/submit-button "Submit")
-                      [:button
-                       {:id "listen"
-                        :onclick "recognize()"
-                        :type "button"}
-                       "Listen"])
-          (interpose "<br><br>" outputs)
-          (he/javascript-tag (-> "jarvis.js"
-                                 (io/resource)
-                                 (slurp)))))
+(defn render [input output]
+  (html (form-to [:get "/"]
+                 (hidden-field {:id :input} "input")
+                 [:button
+                  {:id :listen
+                   :onclick "recognize()"
+                   :type :button}
+                  "Listen"])
+        (when input
+          (format "INPUT: %s" input))
+        [:br]
+        [:br]
+        output
+        (javascript-tag (-> "jarvis.js" (io/resource) (slurp)))))
 
 (defn handler [req]
-  (let [outputs (when-let [input (-> req :params (get "input"))]
+  (let [input (-> req :params (get "input"))
+        output (when (seq input)
                  (try
-                   (commands/process input)
+                   (cmd/process input)
                    (catch Throwable t
-                     [(with-out-str (st/print-stack-trace))])))]
+                     [(with-out-str (st/print-stack-trace t))])))]
     {:status 200
      :headers {"Content-Type" "text/html; charset=utf-8"}
-     :body (render outputs)}))
+     :body (render input output)}))
 
 (defn -main [& args]
   (if (seq args)
-    (->> args (str/join " ") commands/process println)
-    (run-jetty (wrap-params handler) {:port 3000})))
+    (->> args (str/join " ") cmd/process println)
+    (j/run-jetty (p/wrap-params handler) {:port 3000})))

@@ -34,7 +34,7 @@
     (if (seq items)
       (for [i items]
         (format "%s<br>%s" (:name i) (:href i)))
-      ["no playlists found"])))
+      "no playlists found")))
 
 (defn search [category s available?]
   (-> (format "http://ws.spotify.com/search/1/%s.json" category)
@@ -55,14 +55,14 @@
 (defn play-album [s]
   (if-let [album (first (search "album" s album-available?))]
     (osa/tell "Spotify" (format "play track \"%s\"" (:href album)))
-    ["album not found"]))
+    "album not found"))
 
 (defn play-track [s]
   (if-let [track (first (search "track" s track-available?))]
     (osa/tell "Spotify" (format "play track \"%s\" in context \"%s\""
                                 (-> track :href)
                                 (-> track :album :href)))
-    ["track not found"]))
+    "track not found"))
 
 (defn query [category available?]
   (fn [s]
@@ -71,7 +71,7 @@
         (format "%s [%s]"
                 (-> i :name)
                 (-> i :artists first :name)))
-      ["no items found"])))
+      "no items found")))
 
 (defn tell-spotify [s]
   (fn [_] (osa/tell "Spotify" s)))

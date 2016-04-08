@@ -34,7 +34,7 @@
     (cond
      (seq errors)  errors
      (seq results) results
-     :else         ["no results found"])))
+     :else         "no results found")))
 
 (defn ask [s]
   (->> s query parse-xml))

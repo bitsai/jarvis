@@ -1,3 +1,4 @@
+var input = document.getElementById("input");
 var listenButton = document.getElementById("listen");
 
 if (!('webkitSpeechRecognition' in window)) {
@@ -6,27 +7,25 @@ if (!('webkitSpeechRecognition' in window)) {
     var recognizer = new webkitSpeechRecognition();
     var recognizing = false;
 
-    recognizer.onend = function(event) {
-        listenButton.innerHTML = "Listen";
-        recognizing = false;
+    recognizer.onstart = function(event) {
+        listenButton.innerHTML = "Listening";
+        recognizing = true;
     }
 
     recognizer.onresult = function(event) {
-        var transcript = event.results[0][0].transcript;
-        input.value = transcript;
+        input.value = event.results[0][0].transcript;
         input.form.submit();
     }
 
-    recognizer.onstart = function(event) {
-        listenButton.innerHTML = "Listening";
+    recognizer.onend = function(event) {
+        listenButton.innerHTML = "Listen";
+        recognizing = false;
     }
 
     function recognize() {
         if (recognizing) {
             recognizer.stop();
         } else {
-            listenButton.innerHTML = "Initializing";
-            recognizing = true;
             recognizer.start();
         }
     }

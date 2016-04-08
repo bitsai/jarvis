@@ -16,7 +16,7 @@ Start Jarvis in server mode:
 
 Open the interface in the browser:
 
-    localhost:8080
+    localhost:3000
 
 ## Commands
 

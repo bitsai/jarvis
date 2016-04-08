@@ -43,6 +43,4 @@
 (defn -main [& args]
   (if (seq args)
     (->> args (str/join " ") process println)
-    (do
-      (run-jetty (wrap-params handler) {:port 8080})
-      (println "ready!"))))
+    (run-jetty (wrap-params handler) {:port 3000})))

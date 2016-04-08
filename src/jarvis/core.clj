@@ -5,8 +5,8 @@
             [jarvis.commands.spotify :as spotify]
             [jarvis.commands.wolfram :as wolfram]
             [jarvis.html :as html]
-            [org.httpkit.server :as server]
-            [ring.middleware.params :as params]))
+            [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.params :refer [wrap-params]]))
 
 (def commands
   (concat basic/commands
@@ -44,5 +44,5 @@
   (if (seq args)
     (->> args (str/join " ") process println)
     (do
-      (server/run-server (params/wrap-params handler) {:port 8080})
+      (run-jetty (wrap-params handler) {:port 8080})
       (println "ready!"))))

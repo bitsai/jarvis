@@ -1,9 +1,9 @@
 (ns jarvis.commands.wolfram
-  (:require [clojure.data.zip.xml :as zf-xml]
+  (:require [clj-http.client :as http]
+            [clojure.data.zip.xml :as zf-xml]
             [clojure.xml :as xml]
             [clojure.zip :as zip]
-            [environ.core :as e]
-            [org.httpkit.client :as http]))
+            [environ.core :as e]))
 
 (defn query [s & [app-id]]
   (let [app-id (or app-id (-> e/env :wolfram-alpha :app-id))]

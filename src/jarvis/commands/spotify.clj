@@ -1,8 +1,8 @@
 (ns jarvis.commands.spotify
-  (:require [clojure.data.json :as json]
+  (:require [clj-http.client :as http]
+            [clojure.data.json :as json]
             [environ.core :as e]
-            [jarvis.osascript :as osa]
-            [org.httpkit.client :as http]))
+            [jarvis.osascript :as osa]))
 
 (defn base64-encode [s]
   (javax.xml.bind.DatatypeConverter/printBase64Binary (.getBytes s)))

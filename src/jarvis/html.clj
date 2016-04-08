@@ -7,12 +7,12 @@
 (defn render [outputs]
   (h/html (hf/form-to [:post "/"]
                       (hf/text-field "input")
+                      (hf/submit-button "Submit")
                       [:button
                        {:id "listen"
                         :onclick "recognize()"
                         :type "button"}
-                       "Listen"]
-                      (hf/submit-button "Submit"))
+                       "Listen"])
           (interpose "<br><br>" outputs)
           (he/javascript-tag (-> "jarvis.js"
                                  (io/resource)

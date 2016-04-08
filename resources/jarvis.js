@@ -13,7 +13,8 @@ if (!('webkitSpeechRecognition' in window)) {
 
     recognizer.onresult = function(event) {
         var transcript = event.results[0][0].transcript;
-        document.getElementById("input").value = transcript;
+        input.value = transcript;
+        input.form.submit();
     }
 
     recognizer.onstart = function(event) {

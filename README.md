@@ -29,20 +29,20 @@ Open the interface in the browser:
 
 ### Spotify
 
-    find playlists <user> (defaults to .lein-env :spotify :user)
+    find playlist (for $SPOTIFY_USER_ID)
     play playlist <name>
-    find albums <query>
+    find album <query>
     play album <query>
-    find tracks <query>
+    find track <query>
     play track <query>
     next track
     last track
     play
     pause
 
-* By default, searches only return results available in the US. To change this, change .lein-env :spotify :country.
+* By default, searches only return results available in the US. This can be overriden using $SPOTIFY_COUNTRY.
 
-* To enable playlist searches, please fill in :lein-env :spotify :client-id and :client-secret.
+* To enable playlist searches, please set $SPOTIFY_CLIENT_ID and $SPOTIFY_CLIENT_SECRET.
 
 ### Google search
 
@@ -50,4 +50,4 @@ Open the interface in the browser:
 
 * Requires Google Custom Search engine (http://stackoverflow.com/questions/4082966/what-are-the-alternatives-now-that-the-google-web-search-api-has-been-deprecated).
 
-* To enable Google search, please fill in .lein-env :google :api-key and :search-engine-id.
+* To enable Google search, please set $GOOGLE_API_KEY and $GOOGLE_SEARCH_ENGINE_ID.

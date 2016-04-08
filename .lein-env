@@ -1,6 +1,1 @@
-{:google {:api-key ""
-          :search-engine-id ""}
- :spotify {:client-id ""
-           :client-secret ""
-           :country "US"
-           :user ""}}
+{:google-api-key "", :google-search-engine-id "", :spotify-client-id "b15d01b4828e4315a2165ba51c94ccd7", :spotify-client-secret "15754454cc2a46dfa1f8307027f13bf5", :spotify-user-id "bitsai"}

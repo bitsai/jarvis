@@ -1,2 +1,4 @@
 /target
+.lein-env
 .nrepl-port
+profiles.clj

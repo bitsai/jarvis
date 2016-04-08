@@ -1,15 +1,17 @@
 (ns jarvis.commands.spotify
   (:require [clj-http.client :as http]
-            [environ.core :as e]
-            [jarvis.osascript :as osa]))
+            [clojure.string :as str]
+            [environ.core :refer [env]]
+            [jarvis.osascript :as osa])
+  (:import [javax.xml.bind DatatypeConverter]))
 
 (defn- base64-encode [s]
-  (javax.xml.bind.DatatypeConverter/printBase64Binary (.getBytes s)))
+  (-> s (.getBytes) (DatatypeConverter/printBase64Binary)))
 
-(defn- get-token! [& [client-id client-secret]]
-  (let [client-id (or client-id (-> e/env :spotify :client-id))
-        client-secret (or client-secret (-> e/env :spotify :client-secret))
-        auth (->> (str client-id ":" client-secret)
+(defn- get-token! []
+  (let [auth (->> (format "%s:%s"
+                          (-> env :spotify-client-id)
+                          (-> env :spotify-client-secret))
                   (base64-encode)
                   (format "Basic %s"))]
     (-> "https://accounts.spotify.com/api/token"
@@ -20,7 +22,7 @@
         (:access_token))))
 
 (defn- album-available? [a]
-  (let [country (-> e/env :spotify :country)]
+  (let [country (-> env :spotify-country (or "US"))]
     (->> a :availability :territories (re-find (re-pattern country)))))
 
 (defn- track-available? [t]
@@ -43,18 +45,18 @@
                 (-> i :artists first :name)))
       "no items found")))
 
-(defn find-playlists! [& [user]]
-  (let [user (or user (-> e/env :spotify :user))
+(defn find-playlists! [_]
+  (let [user-id (-> env :spotify-user-id)
         auth (format "Bearer %s" (get-token!))
-        items (-> "https://api.spotify.com/v1/users/%s/playlists"
-                  (format user)
+        items (-> (format "https://api.spotify.com/v1/users/%s/playlists" user-id)
                   (http/get {:headers {"Authorization" auth}
                              :as :json})
                   (:body)
                   (:items))]
     (if (seq items)
-      (for [i items]
-        (format "%s<br>%s" (:name i) (:href i)))
+      (->> items
+           (map :name)
+           (str/join "\n"))
       "no playlists found")))
 
 (defn play-playlist! [s]

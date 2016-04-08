@@ -1,6 +1,6 @@
 (ns jarvis.commands.spotify
-  (:require [clj-http.client :as http]
-            [clojure.data.json :as json]
+  (:require [cheshire.core :as json]
+            [clj-http.client :as http]
             [environ.core :as e]
             [jarvis.osascript :as osa]))
 
@@ -18,7 +18,7 @@
                     :headers {"Authorization" auth}})
         (deref)
         (:body)
-        (json/read-str :key-fn keyword)
+        (json/parse-string true)
         (:access_token))))
 
 (defn user-playlists [& [user]]
@@ -29,7 +29,7 @@
                   (http/get {:headers {"Authorization" auth}})
                   (deref)
                   (:body)
-                  (json/read-str :key-fn keyword)
+                  (json/parse-string true)
                   (:items))]
     (if (seq items)
       (for [i items]
@@ -41,7 +41,7 @@
       (http/get {:query-params {:q s}})
       (deref)
       (:body)
-      (json/read-str :key-fn keyword)
+      (json/parse-string true)
       (get (keyword (str category "s")))
       (->> (filter available?))))
 

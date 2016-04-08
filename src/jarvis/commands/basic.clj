@@ -1,8 +1,9 @@
 (ns jarvis.commands.basic
+  (:refer-clojure :exclude [print])
   (:require [clojure.java.shell :as shell]
             [jarvis.osascript :as osa]))
 
-(defn print* [s]
+(defn print [s]
   (println s)
   s)
 
@@ -17,9 +18,3 @@
 
 (defn start-screensaver [_]
   (osa/tell "System Events" "start current screen saver"))
-
-(def commands
-  [{:prefix ["print"]       :f print*}
-   {:prefix ["say"]         :f say}
-   {:prefix ["screensaver"] :f start-screensaver}
-   {:prefix ["volume"]      :f set-volume}])

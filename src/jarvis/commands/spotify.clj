@@ -73,16 +73,11 @@
                 (-> i :artists first :name)))
       "no items found")))
 
-(defn tell-spotify [s]
-  (fn [_] (osa/tell "Spotify" s)))
+(defn query-albums [s]
+  (query "album" album-available?))
 
-(def commands
-  [{:prefix ["spotify" "next"]      :f (tell-spotify "next track")}
-   {:prefix ["spotify" "previous"]  :f (tell-spotify "previous track")}
-   {:prefix ["spotify" "start"]     :f (tell-spotify "play")}
-   {:prefix ["spotify" "stop"]      :f (tell-spotify "pause")}
-   {:prefix ["spotify" "album"]     :f play-album}
-   {:prefix ["spotify" "albums"]    :f (query "album" album-available?)}
-   {:prefix ["spotify" "playlists"] :f user-playlists}
-   {:prefix ["spotify" "track"]     :f play-track}
-   {:prefix ["spotify" "tracks"]    :f (query "track" track-available?)}])
+(defn query-tracks [s]
+  (query "track" track-available?))
+
+(defn tell [s]
+  (fn [_] (osa/tell "Spotify" s)))

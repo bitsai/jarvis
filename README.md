@@ -22,8 +22,8 @@ Open the interface in the browser:
 
 ### Basic
 
-    print <inputs>: print inputs in the terminal
-    say <inputs>: read inputs aloud using OSX "say"
+    print <input>: print input
+    say <input>: read input out loud
     screensaver: start screensaver
     volume <integer between 0 and 100>: set system volume
 

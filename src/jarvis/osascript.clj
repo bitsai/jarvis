@@ -1,9 +1,10 @@
 (ns jarvis.osascript
+  (:refer-clojure :exclude [run!])
   (:require [clojure.java.shell :as shell]))
 
-(defn exec [s]
-  (shell/sh "osascript" "-e" s)
+(defn run! [input]
+  (shell/sh "osascript" "-e" input)
   "success")
 
-(defn tell [app s]
-  (exec (format "tell application \"%s\" to %s" app s)))
+(defn tell! [app input]
+  (run! (format "tell application \"%s\" to %s" app input)))

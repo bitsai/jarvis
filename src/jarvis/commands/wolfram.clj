@@ -5,12 +5,11 @@
             [clojure.zip :as zip]
             [environ.core :as e]))
 
-(defn query [s & [app-id]]
+(defn query! [s & [app-id]]
   (let [app-id (or app-id (-> e/env :wolfram-alpha :app-id))]
     (-> "http://api.wolframalpha.com/v2/query"
         (http/get {:query-params {:appid app-id :format "image" :input s}
                    :as :stream})
-        (deref)
         (:body))))
 
 (defn parse-errors [zipper]
@@ -32,9 +31,9 @@
         errors (parse-errors z)
         results (parse-results z)]
     (cond
-     (seq errors)  errors
-     (seq results) results
-     :else         "no results found")))
+      (seq errors)  errors
+      (seq results) results
+      :else         "no results found")))
 
-(defn ask [s]
-  (->> s query parse-xml))
+(defn ask! [s]
+  (->> s query! parse-xml))

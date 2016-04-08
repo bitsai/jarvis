@@ -29,7 +29,7 @@
   (let [input (-> req :params (get "input"))
         output (when (seq input)
                  (try
-                   (cmd/process input)
+                   (cmd/run! input)
                    (catch Throwable t
                      (with-out-str (st/print-stack-trace t)))))]
     {:status 200
@@ -38,5 +38,5 @@
 
 (defn -main [& args]
   (if (seq args)
-    (->> args (str/join " ") cmd/process println)
+    (->> args (str/join " ") cmd/run! println)
     (run-jetty (-> handler wrap-params wrap-reload) {:port 3000})))

@@ -22,24 +22,25 @@ Open the interface in the browser:
 
 ### Basic
 
-    print <input>: print input
-    say <input>: read input out loud
-    screensaver: start screensaver
-    volume <integer between 0 and 100>: set system volume
+    print <input>
+    say <input>
+    start screensaver
+    set volume <integer between 0 and 100>
 
 ### Spotify
 
-    spotify next: next track
-    spotify previous: previous track
-    spotify start: start playback
-    spotify stop: stop playback
-    spotify album <query>: play specified album
-    spotify albums <query>: list top album results for the query
-    spotify playlists <user>: list playlists for user (defaults to .lein-env :user)
-    spotify track <query>: play specified track
-    spotify tracks <query>: list top track results for the query
+    find playlists <user> (defaults to :user in .lein-env)
+    play playlist <name>
+    find albums <query>
+    play album <query>
+    find tracks <query>
+    play track <query>
+    next track
+    last track
+    play
+    pause
 
-* By default, queries only return results available in the US. To change this, please update :country in .lein-env.
+* By default, searches only return results available in the US. To change this, change :country :country in .lein-env.
 
 * To enable playlist searches, please fill in :client-id and :client-secret in .lein-env.
 

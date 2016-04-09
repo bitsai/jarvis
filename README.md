@@ -24,8 +24,8 @@ Open the interface in the browser:
 
     print <input>
     say <input>
-    start screensaver
-    set volume <integer between 0 and 100>
+    screensaver
+    volume <integer between 0 and 100>
 
 ### Spotify
 
@@ -36,9 +36,9 @@ Open the interface in the browser:
     find track <query>
     play track <query>
     next track
-    last track
+    previous track
     play
-    pause
+    stop
 
 * By default, searches only return results available in the US. This can be overriden using $SPOTIFY_COUNTRY.
 

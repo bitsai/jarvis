@@ -21,6 +21,14 @@
         (:body)
         (:access_token))))
 
+(defn- get-playlists! []
+  (-> (format "https://api.spotify.com/v1/users/%s/playlists"
+              (-> env :spotify-user-id))
+      (http/get {:headers {"Authorization" (format "Bearer %s" (get-token!))}
+                 :as :json})
+      (:body)
+      (:items)))
+
 (defn- album-available? [a]
   (let [country (-> env :spotify-country (or "US"))]
     (->> a :availability :territories (re-find (re-pattern country)))))
@@ -45,24 +53,21 @@
                 (-> i :artists first :name)))
       "no items found")))
 
-(defn find-playlists! [_]
-  (let [user-id (-> env :spotify-user-id)
-        auth (format "Bearer %s" (get-token!))
-        items (-> (format "https://api.spotify.com/v1/users/%s/playlists" user-id)
-                  (http/get {:headers {"Authorization" auth}
-                             :as :json})
-                  (:body)
-                  (:items))]
-    (if (seq items)
-      (->> items
-           (map :name)
-           (str/join "\n"))
-      "no playlists found")))
+(defn find-playlist! [_]
+  (if-let [items (seq (get-playlists!))]
+    (->> items
+         (map :name)
+         (str/join "\n"))
+    "no playlists found"))
 
-(defn play-playlist! [s]
-  "not implemented")
+(defn play-playlist! [input]
+  (if-let [item (->> (get-playlists!)
+                     (filter #(-> % :name str/lower-case (= input)))
+                     (first))]
+    (osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))
+    "no playlists found"))
 
-(defn find-albums! [s]
+(defn find-album! [s]
   (find! "album" album-available?))
 
 (defn play-album! [s]
@@ -70,7 +75,7 @@
     (osa/tell! "Spotify" (format "play track \"%s\"" (:href album)))
     "album not found"))
 
-(defn find-tracks! [s]
+(defn find-track! [s]
   (find! "track" track-available?))
 
 (defn play-track! [s]

@@ -24,10 +24,12 @@
 
 (defn- match [input command]
   (let [pattern (->> command :cmd (format "^%s(.*)$") re-pattern)]
-    (when-let [[_ args] (re-find pattern (-> input str/lower-case str/trim))]
+    (when-let [[_ args] (re-find pattern (str/trim input))]
       [(:fn command) (str/trim args)])))
 
 (defn run! [input]
-  (if-let [[f args] (some (partial match input) commands)]
-    (f args)
-    "TODO: Google search"))
+  (let [;; lower-case input before processing
+        input (str/lower-case input)]
+    (if-let [[f args] (some (partial match input) commands)]
+      (f args)
+      "TODO: Google search")))

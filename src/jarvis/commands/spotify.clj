@@ -29,29 +29,15 @@
       (:body)
       (:items)))
 
-(defn- album-available? [a]
-  (let [country (-> env :spotify-country (or "US"))]
-    (->> a :availability :territories (re-find (re-pattern country)))))
-
-(defn- track-available? [t]
-  (-> t :album album-available?))
-
-(defn- search! [category s available?]
-  (-> (format "http://ws.spotify.com/search/1/%s.json" category)
-      (http/get {:query-params {:q s}
+(defn- search! [category input]
+  (-> (format "https://api.spotify.com/v1/search")
+      (http/get {:query-params {:market (-> env :spotify-country (or "US"))
+                                :q input
+                                :type category}
                  :as :json})
       (:body)
       (get (keyword (str category "s")))
-      (->> (filter available?))))
-
-(defn- find! [category available?]
-  (fn [s]
-    (if-let [items (seq (search! category s available?))]
-      (for [i items]
-        (format "%s [%s]"
-                (-> i :name)
-                (-> i :artists first :name)))
-      "no items found")))
+      (:items)))
 
 (defn find-playlist! [_]
   (if-let [items (seq (get-playlists!))]
@@ -65,25 +51,21 @@
                      (filter #(-> % :name str/lower-case (= input)))
                      (first))]
     (osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))
-    "no playlists found"))
+    "playlist not found"))
 
-(defn find-album! [s]
-  (find! "album" album-available?))
+(defn find! [category]
+  (fn [input]
+    (if-let [items (seq (search! category input))]
+      (->> items
+           (map :name)
+           (str/join "\n"))
+      (format "no %ss found" category))))
 
-(defn play-album! [s]
-  (if-let [album (first (search! "album" s album-available?))]
-    (osa/tell! "Spotify" (format "play track \"%s\"" (:href album)))
-    "album not found"))
-
-(defn find-track! [s]
-  (find! "track" track-available?))
-
-(defn play-track! [s]
-  (if-let [track (first (search! "track" s track-available?))]
-    (osa/tell! "Spotify" (format "play track \"%s\" in context \"%s\""
-                                 (-> track :href)
-                                 (-> track :album :href)))
-    "track not found"))
+(defn play! [category]
+  (fn [input]
+    (if-let [item (first (search! category input))]
+      (osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))
+      (format "%s not found" category))))
 
 (defn tell! [s]
   (fn [_] (osa/tell! "Spotify" s)))

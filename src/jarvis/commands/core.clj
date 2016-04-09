@@ -13,10 +13,10 @@
    ;; spotify
    {:cmd "find playlist"  :fn spotify/find-playlist!}
    {:cmd "play playlist"  :fn spotify/play-playlist!}
-   {:cmd "find album"     :fn spotify/find-album!}
-   {:cmd "play album"     :fn spotify/play-album!}
-   {:cmd "find track"     :fn spotify/find-track!}
-   {:cmd "play track"     :fn spotify/play-track!}
+   {:cmd "find album"     :fn (spotify/find! "album")}
+   {:cmd "play album"     :fn (spotify/play! "album")}
+   {:cmd "find track"     :fn (spotify/find! "track")}
+   {:cmd "play track"     :fn (spotify/play! "track")}
    {:cmd "next track"     :fn (spotify/tell! "next track")}
    {:cmd "previous track" :fn (spotify/tell! "previous track")}
    {:cmd "play"           :fn (spotify/tell! "play")}

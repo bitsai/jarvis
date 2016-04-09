@@ -68,4 +68,5 @@
       (format "%s not found" category))))
 
 (defn tell! [s]
-  (fn [_] (osa/tell! "Spotify" s)))
+  (fn [_]
+    (osa/tell! "Spotify" s)))

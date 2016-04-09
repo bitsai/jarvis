@@ -42,7 +42,7 @@ Open the interface in the browser:
 
 * By default, searches only return results available in the US. This can be overriden using $SPOTIFY_COUNTRY.
 
-* To enable playlist searches, please set $SPOTIFY_CLIENT_ID and $SPOTIFY_CLIENT_SECRET.
+* To enable playlist commands, please set $SPOTIFY_CLIENT_ID and $SPOTIFY_CLIENT_SECRET.
 
 ### Google search
 

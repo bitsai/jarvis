@@ -37,8 +37,8 @@ Open the interface in the browser:
     play track <query>
     next track
     previous track
-    play
-    stop
+    play music
+    stop music
 
 * By default, searches only return results available in the US. This can be overriden using $SPOTIFY_COUNTRY.
 

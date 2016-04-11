@@ -19,8 +19,8 @@
    {:cmd "play track"     :fn (spotify/play! "track")}
    {:cmd "next track"     :fn (spotify/tell! "next track")}
    {:cmd "previous track" :fn (spotify/tell! "previous track")}
-   {:cmd "play"           :fn (spotify/tell! "play")}
-   {:cmd "stop"           :fn (spotify/tell! "pause")}])
+   {:cmd "play music"     :fn (spotify/tell! "play")}
+   {:cmd "stop music"     :fn (spotify/tell! "pause")}])
 
 (defn- match [input command]
   (let [pattern (->> command :cmd (format "^%s(.*)$") re-pattern)]

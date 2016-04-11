@@ -10,8 +10,8 @@
 
 (defn- get-token! []
   (let [auth (->> (format "%s:%s"
-                          (-> env :spotify-client-id)
-                          (-> env :spotify-client-secret))
+                          (:spotify-client-id env)
+                          (:spotify-client-secret env))
                   (base64-encode)
                   (format "Basic %s"))]
     (-> "https://accounts.spotify.com/api/token"
@@ -23,7 +23,7 @@
 
 (defn- get-playlists! []
   (-> (format "https://api.spotify.com/v1/users/%s/playlists"
-              (-> env :spotify-user-id))
+              (:spotify-user-id env))
       (http/get {:headers {"Authorization" (format "Bearer %s" (get-token!))}
                  :as :json})
       (:body)

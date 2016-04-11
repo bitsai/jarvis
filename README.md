@@ -44,10 +44,8 @@ Open the interface in the browser:
 
 * To enable playlist commands, please set $SPOTIFY_CLIENT_ID and $SPOTIFY_CLIENT_SECRET.
 
-### Google search
+### Wolfram Alpha
 
-* If no command is given, the input is treated as a Google search.
+* If no command is given, the input is treated as a Wolfram Alpha query.
 
-* Requires Google Custom Search engine (http://stackoverflow.com/questions/4082966/what-are-the-alternatives-now-that-the-google-web-search-api-has-been-deprecated).
-
-* To enable Google search, please set $GOOGLE_API_KEY and $GOOGLE_SEARCH_ENGINE_ID.
+* To enable Wolfram Alpha queries, please set $WOLFRAM_ALPHA_APP_ID.

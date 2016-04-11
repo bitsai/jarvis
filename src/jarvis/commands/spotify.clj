@@ -30,7 +30,7 @@
       (:items)))
 
 (defn- search! [category input]
-  (-> (format "https://api.spotify.com/v1/search")
+  (-> "https://api.spotify.com/v1/search"
       (http/get {:query-params {:market (-> env :spotify-country (or "US"))
                                 :q input
                                 :type category}

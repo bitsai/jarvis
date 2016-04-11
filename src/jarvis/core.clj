@@ -13,11 +13,14 @@
 (defn render [input output]
   (html (form-to [:get "/"]
                  (hidden-field {:id :input} "input")
-                 [:button
-                  {:id :listen
-                   :onclick "recognize()"
-                   :type :button}
-                  "Listen"])
+                 [:div
+                  {:style "text-align:center"}
+                  [:button
+                   {:id :listen
+                    :onclick "recognize()"
+                    :style "font-size:60px; height:100px; width:900px"
+                    :type :button}
+                   "Listen"]])
         (when input
           (format "INPUT: %s" input))
         (repeat 2 [:br])

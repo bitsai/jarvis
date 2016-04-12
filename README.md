@@ -44,6 +44,12 @@ Open the interface in the browser:
 
 * To enable playlist commands, please set $SPOTIFY_CLIENT_ID and $SPOTIFY_CLIENT_SECRET.
 
+### Weather Announcement
+
+    weather
+
+* To enable weather announcement, please set $WOLFRAM_ALPHA_APP_ID.
+
 ### Wolfram Alpha
 
 * If no command is given, the input is treated as a Wolfram Alpha query.

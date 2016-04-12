@@ -3,6 +3,7 @@
   (:require [clojure.string :as str]
             [jarvis.commands.basic :as basic]
             [jarvis.commands.spotify :as spotify]
+            [jarvis.commands.weather :as weather]
             [jarvis.commands.wolfram :as wolfram]))
 
 (def commands
@@ -21,7 +22,9 @@
    {:cmd "next track"     :fn (spotify/tell! "next track")}
    {:cmd "previous track" :fn (spotify/tell! "previous track")}
    {:cmd "play music"     :fn (spotify/tell! "play")}
-   {:cmd "stop music"     :fn (spotify/tell! "pause")}])
+   {:cmd "stop music"     :fn (spotify/tell! "pause")}
+   ;; weather
+   {:cmd "weather" :fn weather/announce!}])
 
 (defn- match [input command]
   (let [pattern (->> command :cmd (format "^%s(.*)$") re-pattern)]

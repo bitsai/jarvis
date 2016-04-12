@@ -17,9 +17,9 @@
    :wind (parse-data #"wind speed \| (.*)\n" weather)
    :forecast-today (parse-data #"Today\n(.*)\n" weather)})
 
-(defn announce! [_]
+(defn announce! [location]
   (basic/say! (format "Hello, it's %s." (->local-time)))
-  (let [weather (wolfram/ask! "weather near me")]
+  (let [weather (wolfram/ask! (format "weather near %s" location))]
     (if (= weather "no results found")
       (basic/say! weather)
       (let [parsed-weather (parse-weather weather)]

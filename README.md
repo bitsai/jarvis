@@ -24,8 +24,8 @@ Open the interface in the browser:
 
     print <input>
     say <input>
-    screensaver
-    volume <integer between 0 and 100>
+    start screensaver
+    set volume <integer between 0 and 100>
 
 ### Spotify
 
@@ -46,7 +46,7 @@ Open the interface in the browser:
 
 ### Weather Announcement
 
-    weather
+    weather near <location>
 
 * To enable weather announcement, please set $WOLFRAM_ALPHA_APP_ID.
 

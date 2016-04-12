@@ -8,10 +8,10 @@
 
 (def commands
   [;; basic
-   {:cmd "print"       :fn basic/print!}
-   {:cmd "say"         :fn basic/say!}
-   {:cmd "screensaver" :fn basic/start-screensaver!}
-   {:cmd "volume"      :fn basic/set-volume!}
+   {:cmd "print"             :fn basic/print!}
+   {:cmd "say"               :fn basic/say!}
+   {:cmd "start screensaver" :fn basic/start-screensaver!}
+   {:cmd "set volume"        :fn basic/set-volume!}
    ;; spotify
    {:cmd "find playlist"  :fn spotify/find-playlist!}
    {:cmd "play playlist"  :fn spotify/play-playlist!}
@@ -24,7 +24,7 @@
    {:cmd "play music"     :fn (spotify/tell! "play")}
    {:cmd "stop music"     :fn (spotify/tell! "pause")}
    ;; weather
-   {:cmd "weather" :fn weather/announce!}])
+   {:cmd "weather near" :fn weather/announce!}])
 
 (defn- match [input command]
   (let [pattern (->> command :cmd (format "^%s(.*)$") re-pattern)]

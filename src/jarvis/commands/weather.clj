@@ -18,8 +18,8 @@
    :forecast-today (parse-data #"Today\n(.*)\n" weather)})
 
 (defn announce! [_]
+  (basic/say! (format "Hello, it's %s." (->local-time)))
   (let [weather (wolfram/ask! "weather near me")]
-    (basic/say! (format "Hello, it's %s." (->local-time)))
     (if (= weather "no results found")
       (basic/say! weather)
       (let [parsed-weather (parse-weather weather)]

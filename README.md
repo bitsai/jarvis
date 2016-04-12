@@ -20,6 +20,10 @@ Open the interface in the browser:
 
 ## Commands
 
+### Help
+
+    help
+
 ### Basic
 
     print <input>

@@ -2,18 +2,18 @@
   (:require [clojure.java.shell :as shell]
             [jarvis.osascript :as osa]))
 
-(defn print! [s]
-  (println s)
-  s)
+(defn print! [input]
+  (println input)
+  input)
 
-(defn say! [s]
-  (shell/sh "say" s)
+(defn say! [input]
+  (shell/sh "say" input)
   "success")
 
-(defn set-volume! [s]
-  (if-let [v (try (Long. s) (catch Throwable t))]
-    (osa/run! (format "set volume output volume %d" v))
-    (format "volume should be an integer between 0 and 100")))
+(defn set-volume! [input]
+  (->> (Long. input)
+       (format "set volume output volume %d")
+       (osa/run!)))
 
-(defn start-screensaver! [_]
+(defn start-screensaver! []
   (osa/tell! "System Events" "start current screen saver"))

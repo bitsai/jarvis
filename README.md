@@ -24,12 +24,12 @@ Open the interface in the browser:
 
     print <input>
     say <input>
-    start screensaver
     set volume <integer between 0 and 100>
+    start screensaver
 
 ### Spotify
 
-    find playlist (for $SPOTIFY_USER_ID)
+    show playlist (for $SPOTIFY_USER_ID)
     play playlist <name>
     find album <query>
     play album <query>

@@ -1,4 +1,5 @@
 (ns jarvis.commands.spotify
+  (:refer-clojure :exclude [run!])
   (:require [clj-http.client :as http]
             [clojure.string :as str]
             [environ.core :refer [env]]
@@ -39,7 +40,7 @@
       (get (keyword (str category "s")))
       (:items)))
 
-(defn find-playlist! [_]
+(defn show-playlists! []
   (if-let [items (seq (get-playlists!))]
     (->> items
          (map :name)
@@ -67,6 +68,6 @@
       (osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))
       (format "%s not found" category))))
 
-(defn tell! [s]
-  (fn [_]
+(defn run! [s]
+  (fn []
     (osa/tell! "Spotify" s)))

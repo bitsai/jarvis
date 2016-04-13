@@ -12,7 +12,7 @@
 
 (defn- parse-weather [weather]
   {:location (parse-data #"Weather forecast for (.*)\n" weather)
-   :temperature (parse-data #"temperature \| (.*)\s+\(wind" weather)
+   :temperature (parse-data #"temperature \| (.*)\n" weather)
    :conditions (parse-data #"conditions \| (.*)\n" weather) 
    :wind (parse-data #"wind speed \| (.*)\n" weather)
    :forecast-today (parse-data #"Today\n(.*)\n" weather)})

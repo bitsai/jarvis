@@ -43,9 +43,11 @@ Use $FACEBOOK_PAGE_ACCESS_TOKEN to set Facebook page access token.
 
     my playlist
     view playlist <name>
+    play playlist <name> track <integer>
     play playlist <name>
     find album <query>
     view album <query>
+    play album <query> track <integer>
     play album <query>
     next track
     previous track

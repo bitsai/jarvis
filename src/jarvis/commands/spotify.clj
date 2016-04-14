@@ -25,8 +25,7 @@
         (:access_token))))
 
 (defn- get-playlists! [user-id]
-  (-> (format "https://api.spotify.com/v1/users/%s/playlists"
-              user-id)
+  (-> (format "https://api.spotify.com/v1/users/%s/playlists" user-id)
       (http/get {:headers {"Authorization" (format "Bearer %s" (get-token!))}
                  :as :json})
       (:body)
@@ -57,8 +56,7 @@
       (:items)))
 
 (defn- get-album-tracks! [album-id]
-  (-> (format "https://api.spotify.com/v1/albums/%s/tracks"
-              album-id)
+  (-> (format "https://api.spotify.com/v1/albums/%s/tracks" album-id)
       (http/get {:query-params {:market (-> env :spotify-country (or "US"))}
                  :as :json})
       (:body)
@@ -67,35 +65,45 @@
 ;; public fns
 
 (defn my-playlists! []
-  (if-let [items (-> env :spotify-user-id get-playlists! seq)]
-    (map :name items)
+  (if-let [playlists (-> env :spotify-user-id get-playlists! seq)]
+    (map :name playlists)
     ["no playlists found"]))
 
 (defn view-playlist! [input]
-  (if-let [item (get-playlist! (:spotify-user-id env) input)]
-    (->> (get-playlist-tracks! (-> item :owner :id) (:id item))
+  (if-let [playlist (get-playlist! (:spotify-user-id env) input)]
+    (->> (get-playlist-tracks! (-> playlist :owner :id) (:id playlist))
          (map-indexed #(format "%d. %s" (inc %1) (-> %2 :track :name))))
     ["playlist not found"]))
 
-(defn play-playlist! [input]
-  (if-let [item (get-playlist! (:spotify-user-id env) input)]
-    [(osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))]
+(defn play-playlist! [input & [track-idx]]
+  (if-let [playlist (get-playlist! (:spotify-user-id env) input)]
+    (let [idx (-> track-idx (or "1") (Long.) dec)
+          track (-> (get-playlist-tracks! (-> playlist :owner :id) (:id playlist))
+                    (nth idx))]
+      [(osa/tell! "Spotify" (format "play track \"%s\" in context \"%s\""
+                                    (-> track :track :uri)
+                                    (:uri playlist)))])
     ["playlist not found"]))
 
 (defn find-album! [input]
-  (if-let [items (->> input (search! "album") seq)]
-    (map :name items)
+  (if-let [albums (->> input (search! "album") seq)]
+    (map :name albums)
     ["no albums found"]))
 
 (defn view-album! [input]
-  (if-let [item (->> input (search! "album") first)]
-    (->> (get-album-tracks! (:id item))
+  (if-let [album (->> input (search! "album") first)]
+    (->> (get-album-tracks! (:id album))
          (map-indexed #(format "%d. %s" (inc %1) (:name %2))))
     ["album not found"]))
 
-(defn play-album! [input]
-  (if-let [item (->> input (search! "album") first)]
-    [(osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))]
+(defn play-album! [input & [track-idx]]
+  (if-let [album (->> input (search! "album") first)]
+    (let [idx (-> track-idx (or "1") (Long.) dec)
+          track (-> (get-album-tracks! (:id album))
+                    (nth idx))]
+      [(osa/tell! "Spotify" (format "play track \"%s\" in context \"%s\""
+                                    (:uri track)
+                                    (:uri album)))])
     ["album not found"]))
 
 (defn run! [s]

@@ -4,11 +4,12 @@
             [clojure.xml :as xml]
             [environ.core :refer [env]]))
 
-(defn- query! [input]
+(defn- query! [input & [params]]
   (-> "http://api.wolframalpha.com/v2/query"
-      (http/get {:query-params {:appid (:wolfram-alpha-app-id env)
-                                :format "plaintext"
-                                :input input}
+      (http/get {:query-params (merge {:appid (:wolfram-alpha-app-id env)
+                                       :format "plaintext"
+                                       :input input}
+                                      params)
                  :as :stream})
       (:body)
       (xml/parse)))
@@ -44,7 +45,7 @@
                               (seq))]
     (str/join "\n\n" parsed-pods)))
 
-(defn ask! [input]
-  (if-let [parsed-query-result (-> input query! parse-query-result)]
+(defn ask! [input & [params]]
+  (if-let [parsed-query-result (-> input (query! params) parse-query-result)]
     parsed-query-result
     "no results found"))

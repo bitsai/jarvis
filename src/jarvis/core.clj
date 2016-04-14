@@ -36,11 +36,11 @@
         (javascript-tag (-> "jarvis.js" (io/resource) (slurp)))))
 
 (defroutes app
-   (GET "/" [input]
-        (let [output (handle-input! input)]
-          {:status 200
-           :headers {"Content-Type" "text/html; charset=utf-8"}
-           :body (render input output)})))
+  (GET "/" [input]
+       (let [output (handle-input! input)]
+         {:status 200
+          :headers {"Content-Type" "text/html; charset=utf-8"}
+          :body (render input output)})))
 
 (defn -main [& args]
   (if (seq args)

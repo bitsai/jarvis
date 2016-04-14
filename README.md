@@ -18,6 +18,14 @@ Open the interface in the browser:
 
     localhost:3000
 
+## Facebook integration
+
+Following the setup instructions here: https://developers.facebook.com/docs/messenger-platform/quickstart
+
+If running locally, use ngrok to make webhook available to Facebook: https://ngrok.com/
+
+Use $FACEBOOK_PAGE_ACCESS_TOKEN to set Facebook page access token.
+
 ## Commands
 
 ### Help
@@ -52,7 +60,7 @@ Open the interface in the browser:
 
 * To enable "my playlist" commands, please set $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET, and $SPOTIFY_USER_ID.
 
-### Weather Announcement
+### Weather announcement
 
     announce weather near <location>
 

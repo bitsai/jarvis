@@ -52,10 +52,10 @@
                           (json/parse-string true)
                           (:entry)
                           (first)
-                          (:messaging))]
+                          (:messaging))
+                :let [sender-id (-> event :sender :id)]]
           (when-let [input (-> event :message :text)]
-            (let [sender-id (-> event :sender :id)
-                  output (handle-input! input)]
+            (doseq [output (handle-input! input)]
               (fb/send-message! sender-id output))))
         {:status 200}))
 

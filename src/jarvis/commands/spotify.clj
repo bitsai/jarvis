@@ -40,34 +40,30 @@
       (get (keyword (str category "s")))
       (:items)))
 
-(defn show-playlists! []
+(defn my-playlists! []
   (if-let [items (seq (get-playlists!))]
-    (->> items
-         (map :name)
-         (str/join "\n"))
-    "no playlists found"))
+    (map :name items)
+    ["no playlists found"]))
 
 (defn play-playlist! [input]
   (if-let [item (->> (get-playlists!)
                      (filter #(-> % :name str/lower-case (= input)))
                      (first))]
-    (osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))
-    "playlist not found"))
+    [(osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))]
+    ["playlist not found"]))
 
 (defn find! [category]
   (fn [input]
     (if-let [items (seq (search! category input))]
-      (->> items
-           (map :name)
-           (str/join "\n"))
-      (format "no %ss found" category))))
+      (map :name items)
+      [(format "no %ss found" category)])))
 
 (defn play! [category]
   (fn [input]
     (if-let [item (first (search! category input))]
-      (osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))
-      (format "%s not found" category))))
+      [(osa/tell! "Spotify" (format "play track \"%s\"" (:uri item)))]
+      [(format "%s not found" category)])))
 
 (defn run! [s]
   (fn []
-    (osa/tell! "Spotify" s)))
+    [(osa/tell! "Spotify" s)]))

@@ -4,16 +4,14 @@
 
 (defn print! [input]
   (println input)
-  input)
+  [input])
 
 (defn say! [input]
   (shell/sh "say" input)
-  "success")
+  ["success"])
 
 (defn set-volume! [input]
-  (->> (Long. input)
-       (format "set volume output volume %d")
-       (osa/run!)))
+  [(osa/run! (format "set volume output volume %d" (Long. input)))])
 
 (defn start-screensaver! []
-  (osa/tell! "System Events" "start current screen saver"))
+  [(osa/tell! "System Events" "start current screen saver")])

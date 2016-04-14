@@ -33,7 +33,7 @@ Open the interface in the browser:
 
 ### Spotify
 
-    show playlist (for $SPOTIFY_USER_ID)
+    my playlist (for $SPOTIFY_USER_ID)
     play playlist <name>
     find album <query>
     play album <query>
@@ -50,7 +50,7 @@ Open the interface in the browser:
 
 ### Weather Announcement
 
-    weather near <location>
+    announce weather near <location>
 
 * To enable weather announcement, please set $WOLFRAM_ALPHA_APP_ID.
 

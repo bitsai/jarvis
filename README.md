@@ -41,16 +41,12 @@ Use $FACEBOOK_PAGE_ACCESS_TOKEN to set Facebook page access token.
 
 ### Spotify
 
-    show my playlist
-    play my playlist <name>
+    my playlist
+    view playlist <name>
+    play playlist <name>
     find album <query>
+    view album <query>
     play album <query>
-    find artist <query>
-    play artist <query>
-    find playlist <query>
-    play playlist <query>
-    find track <query>
-    play track <query>
     next track
     previous track
     play music
@@ -58,7 +54,7 @@ Use $FACEBOOK_PAGE_ACCESS_TOKEN to set Facebook page access token.
 
 * By default, searches only return results available in the US. This can be overriden using $SPOTIFY_COUNTRY.
 
-* To enable "my playlist" commands, please set $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET, and $SPOTIFY_USER_ID.
+* To enable playlist commands, please set $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET, and $SPOTIFY_USER_ID.
 
 ### Weather announcement
 

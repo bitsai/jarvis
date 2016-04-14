@@ -33,10 +33,14 @@ Open the interface in the browser:
 
 ### Spotify
 
-    my playlist (for $SPOTIFY_USER_ID)
-    play playlist <name>
+    show my playlist
+    play my playlist <name>
     find album <query>
     play album <query>
+    find artist <query>
+    play artist <query>
+    find playlist <query>
+    play playlist <query>
     find track <query>
     play track <query>
     next track
@@ -46,7 +50,7 @@ Open the interface in the browser:
 
 * By default, searches only return results available in the US. This can be overriden using $SPOTIFY_COUNTRY.
 
-* To enable playlist commands, please set $SPOTIFY_CLIENT_ID and $SPOTIFY_CLIENT_SECRET.
+* To enable "my playlist" commands, please set $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET, and $SPOTIFY_USER_ID.
 
 ### Weather Announcement
 

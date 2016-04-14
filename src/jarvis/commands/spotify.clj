@@ -40,12 +40,12 @@
       (get (keyword (str category "s")))
       (:items)))
 
-(defn my-playlists! []
+(defn show-my-playlists! []
   (if-let [items (seq (get-playlists!))]
     (map :name items)
     ["no playlists found"]))
 
-(defn play-playlist! [input]
+(defn play-my-playlist! [input]
   (if-let [item (->> (get-playlists!)
                      (filter #(-> % :name str/lower-case (= input)))
                      (first))]

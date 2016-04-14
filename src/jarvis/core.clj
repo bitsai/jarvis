@@ -15,9 +15,9 @@
     (try
       (cmd/run! input)
       (catch Throwable t
-        (with-out-str (st/print-stack-trace t))))))
+        [(with-out-str (st/print-stack-trace t))]))))
 
-(defn- render [input output]
+(defn- render [input outputs]
   (html (form-to [:get "/"]
                  (hidden-field {:id :input} "input")
                  [:div
@@ -31,18 +31,19 @@
         (when input
           (format "INPUT: %s" input))
         (repeat 2 [:br])
-        (when output
-          (str/replace output "\n" "<br>"))
+        (->> outputs
+             (map #(str/replace % "\n" "<br>"))
+             (interpose (repeat 2 [:br])))
         (javascript-tag (-> "jarvis.js" (io/resource) (slurp)))))
 
 (defroutes app
   (GET "/" [input]
-       (let [output (handle-input! input)]
+       (let [outputs (handle-input! input)]
          {:status 200
           :headers {"Content-Type" "text/html; charset=utf-8"}
-          :body (render input output)})))
+          :body (render input outputs)})))
 
 (defn -main [& args]
   (if (seq args)
-    (->> args (str/join " ") handle-input! println)
+    (->> args (str/join " ") handle-input! (str/join "\n\n") println)
     (run-jetty (wrap-params app) {:port 3000})))

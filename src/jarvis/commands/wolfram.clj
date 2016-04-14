@@ -38,14 +38,12 @@
          (str/join "\n"))))
 
 (defn- parse-query-result [query-result]
-  (when-let [parsed-pods (->> query-result
-                              (:content)
-                              (filter #(-> % :tag (= :pod)))
-                              (keep parse-pod)
-                              (seq))]
-    (str/join "\n\n" parsed-pods)))
+  (->> query-result
+       (:content)
+       (filter #(-> % :tag (= :pod)))
+       (keep parse-pod)))
 
 (defn ask! [input & [params]]
-  (if-let [parsed-query-result (-> input (query! params) parse-query-result)]
-    parsed-query-result
-    "no results found"))
+  (if-let [parsed-pods (-> input (query! params) parse-query-result seq)]
+    parsed-pods
+    ["no results found"]))

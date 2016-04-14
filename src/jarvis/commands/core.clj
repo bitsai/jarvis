@@ -13,7 +13,7 @@
    {:cmd "set volume (\\d+)" :fn basic/set-volume!}
    {:cmd "start screensaver" :fn basic/start-screensaver!}
    ;; spotify
-   {:cmd "show playlist"      :fn spotify/show-playlists!}
+   {:cmd "my playlist"        :fn spotify/my-playlists!}
    {:cmd "play playlist (.+)" :fn spotify/play-playlist!}
    {:cmd "find album (.+)"    :fn (spotify/find! "album")}
    {:cmd "play album (.+)"    :fn (spotify/play! "album")}
@@ -24,7 +24,7 @@
    {:cmd "play music"         :fn (spotify/run! "play")}
    {:cmd "stop music"         :fn (spotify/run! "pause")}
    ;; weather
-   {:cmd "weather near (.+)" :fn weather/announce!}])
+   {:cmd "announce weather near (.+)" :fn weather/announce!}])
 
 (defn- match [input command]
   (let [pattern (->> command :cmd (format "^%s$") re-pattern)
@@ -38,9 +38,8 @@
   (let [;; lower-case input before processing
         input (str/lower-case input)]
     (if (= input "help")
-      (->> (concat (map :cmd commands)
-                   ["DEFAULT: Wolfram Alpha query"])
-           (str/join "\n"))
+      (concat (map :cmd commands)
+              ["DEFAULT: Wolfram Alpha query"])
       (if-let [[f args] (some (partial match input) commands)]
         (apply f args)
         (wolfram/ask! input)))))

@@ -1,12 +1,14 @@
 (ns jarvis.core
-  (:require [clojure.java.io :as io]
+  (:require [cheshire.core :as json]
+            [clojure.java.io :as io]
             [clojure.stacktrace :as st]
             [clojure.string :as str]
-            [compojure.core :refer [defroutes GET]]
+            [compojure.core :refer [defroutes GET POST]]
             [hiccup.core :refer [html]]
             [hiccup.element :refer [javascript-tag]]
             [hiccup.form :refer [form-to hidden-field]]
             [jarvis.commands.core :as cmd]
+            [jarvis.facebook :as fb]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]))
 
@@ -41,7 +43,22 @@
        (let [outputs (handle-input! input)]
          {:status 200
           :headers {"Content-Type" "text/html; charset=utf-8"}
-          :body (render input outputs)})))
+          :body (render input outputs)}))
+  (GET "/facebook-webhook" request
+       (-> request :params (get "hub.challenge")))
+  (POST "/facebook-webhook" request
+        (doseq [event (-> request
+                          (:body)
+                          (slurp)
+                          (json/parse-string true)
+                          (:entry)
+                          (first)
+                          (:messaging))
+                :let [sender-id (-> event :sender :id)]]
+          (when-let [input (-> event :message :text)]
+            (doseq [output (handle-input! input)]
+              (fb/send-message! sender-id output))))
+        {:status 200}))
 
 (defn -main [& args]
   (if (seq args)

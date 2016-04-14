@@ -63,7 +63,7 @@
       (:body)
       (:items)))
 
-(defn- search-items! [search-fn]
+(defn- find-items! [search-fn]
   (if-let [items (seq (search-fn))]
     (map :name items)
     ["no items found"]))
@@ -87,19 +87,31 @@
 ;; public fns
 
 (defn my-playlists! []
-  (search-items! #(get-playlists! (:spotify-user-id env))))
+  (find-items! #(get-playlists! (:spotify-user-id env))))
 
-(defn view-playlist! [input]
+(defn view-my-playlist! [input]
   (view-item-tracks! #(search-playlists! (:spotify-user-id env) input)
                      get-playlist-tracks!))
 
-(defn play-playlist! [input & [track-idx]]
+(defn play-my-playlist! [input & [track-idx]]
   (play-item-track! #(search-playlists! (:spotify-user-id env) input)
                     get-playlist-tracks!
                     track-idx))
 
+(defn find-playlist! [input]
+  (find-items! #(search! "playlist" input)))
+
+(defn view-playlist! [input]
+  (view-item-tracks! #(search! "playlist" input)
+                     get-playlist-tracks!))
+
+(defn play-playlist! [input & [track-idx]]
+  (play-item-track! #(search! "playlist" input)
+                    get-playlist-tracks!
+                    track-idx))
+
 (defn find-album! [input]
-  (search-items! #(search! "album" input)))
+  (find-items! #(search! "album" input)))
 
 (defn view-album! [input]
   (view-item-tracks! #(search! "album" input)

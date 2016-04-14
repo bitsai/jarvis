@@ -42,9 +42,13 @@ Use $FACEBOOK_PAGE_ACCESS_TOKEN to set Facebook page access token.
 ### Spotify
 
     my playlist
-    view playlist <name>
-    play playlist <name> track <integer>
-    play playlist <name>
+    view my playlist <name>
+    play my playlist <name> track <integer>
+    play my playlist <name>
+    find playlist <query>
+    view playlist <query>
+    play playlist <query> track <integer>
+    play playlist <query>
     find album <query>
     view album <query>
     play album <query> track <integer>

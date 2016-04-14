@@ -2,15 +2,22 @@
   (:require [clojure.java.io :as io]
             [clojure.stacktrace :as st]
             [clojure.string :as str]
+            [compojure.core :refer [defroutes GET]]
             [hiccup.core :refer [html]]
             [hiccup.element :refer [javascript-tag]]
             [hiccup.form :refer [form-to hidden-field]]
             [jarvis.commands.core :as cmd]
             [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.params :refer [wrap-params]]
-            [ring.middleware.reload :refer [wrap-reload]]))
+            [ring.middleware.params :refer [wrap-params]]))
 
-(defn render [input output]
+(defn- handle-input! [input]
+  (when (seq input)
+    (try
+      (cmd/run! input)
+      (catch Throwable t
+        (with-out-str (st/print-stack-trace t))))))
+
+(defn- render [input output]
   (html (form-to [:get "/"]
                  (hidden-field {:id :input} "input")
                  [:div
@@ -28,18 +35,14 @@
           (str/replace output "\n" "<br>"))
         (javascript-tag (-> "jarvis.js" (io/resource) (slurp)))))
 
-(defn handler [req]
-  (let [input (-> req :params (get "input"))
-        output (when (seq input)
-                 (try
-                   (cmd/run! input)
-                   (catch Throwable t
-                     (with-out-str (st/print-stack-trace t)))))]
-    {:status 200
-     :headers {"Content-Type" "text/html; charset=utf-8"}
-     :body (render input output)}))
+(defroutes app
+   (GET "/" [input]
+        (let [output (handle-input! input)]
+          {:status 200
+           :headers {"Content-Type" "text/html; charset=utf-8"}
+           :body (render input output)})))
 
 (defn -main [& args]
   (if (seq args)
-    (->> args (str/join " ") cmd/run! println)
-    (run-jetty (-> handler wrap-params wrap-reload) {:port 3000})))
+    (->> args (str/join " ") handle-input! println)
+    (run-jetty (wrap-params app) {:port 3000})))

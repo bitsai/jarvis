@@ -1,6 +1,7 @@
 (defproject jarvis "0.1.0-SNAPSHOT"
   :dependencies [[cheshire "5.5.0"]
                  [clj-http "2.1.0"]
+                 [compojure "1.5.0"]
                  [environ "1.0.2"]
                  [hiccup "1.0.5"]
                  [org.clojure/clojure "1.8.0"]

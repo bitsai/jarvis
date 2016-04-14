@@ -1,16 +1,26 @@
 (ns jarvis.core
-  (:require [clojure.java.io :as io]
+  (:require [cheshire.core :as json]
+            [clojure.java.io :as io]
             [clojure.stacktrace :as st]
             [clojure.string :as str]
+            [compojure.core :refer [defroutes GET POST]]
             [hiccup.core :refer [html]]
             [hiccup.element :refer [javascript-tag]]
             [hiccup.form :refer [form-to hidden-field]]
             [jarvis.commands.core :as cmd]
+            [jarvis.facebook :as fb]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.reload :refer [wrap-reload]]))
 
-(defn render [input output]
+(defn- handle-input! [input]
+  (when (seq input)
+    (try
+      (cmd/run! input)
+      (catch Throwable t
+        (with-out-str (st/print-stack-trace t))))))
+
+(defn- render [input output]
   (html (form-to [:get "/"]
                  (hidden-field {:id :input} "input")
                  [:div
@@ -28,18 +38,29 @@
           (str/replace output "\n" "<br>"))
         (javascript-tag (-> "jarvis.js" (io/resource) (slurp)))))
 
-(defn handler [req]
-  (let [input (-> req :params (get "input"))
-        output (when (seq input)
-                 (try
-                   (cmd/run! input)
-                   (catch Throwable t
-                     (with-out-str (st/print-stack-trace t)))))]
-    {:status 200
-     :headers {"Content-Type" "text/html; charset=utf-8"}
-     :body (render input output)}))
+(defroutes app
+  (GET "/" [input]
+       (let [output (handle-input! input)]
+         {:status 200
+          :headers {"Content-Type" "text/html; charset=utf-8"}
+          :body (render input output)}))
+  (GET "/webhook" request
+       (-> request :params (get "hub.challenge")))
+  (POST "/webhook" request
+        (doseq [event (-> request
+                          (:body)
+                          (slurp)
+                          (json/parse-string true)
+                          (:entry)
+                          (first)
+                          (:messaging))]
+          (when-let [input (-> event :message :text)]
+            (let [sender-id (-> event :sender :id)
+                  output (handle-input! input)]
+              (fb/send-message! sender-id output))))
+        {:status 200}))
 
 (defn -main [& args]
   (if (seq args)
-    (->> args (str/join " ") cmd/run! println)
-    (run-jetty (-> handler wrap-params wrap-reload) {:port 3000})))
+    (->> args (str/join " ") handle-input! println)
+    (run-jetty (-> app wrap-params wrap-reload) {:port 3000})))

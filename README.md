@@ -20,7 +20,7 @@ Open the interface in the browser:
 
 ## Facebook integration
 
-Following the setup instructions here: https://developers.facebook.com/docs/messenger-platform/quickstart
+Follow the setup instructions here: https://developers.facebook.com/docs/messenger-platform/quickstart
 
 If running locally, use ngrok to make webhook available to Facebook: https://ngrok.com/
 

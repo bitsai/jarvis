@@ -13,16 +13,20 @@
    {:cmd "set volume (\\d+)" :fn basic/set-volume!}
    {:cmd "start screensaver" :fn basic/start-screensaver!}
    ;; spotify
-   {:cmd "my playlist"        :fn spotify/my-playlists!}
-   {:cmd "play playlist (.+)" :fn spotify/play-playlist!}
-   {:cmd "find album (.+)"    :fn (spotify/find! "album")}
-   {:cmd "play album (.+)"    :fn (spotify/play! "album")}
-   {:cmd "find track (.+)"    :fn (spotify/find! "track")}
-   {:cmd "play track (.+)"    :fn (spotify/play! "track")}
-   {:cmd "next track"         :fn (spotify/run! "next track")}
-   {:cmd "previous track"     :fn (spotify/run! "previous track")}
-   {:cmd "play music"         :fn (spotify/run! "play")}
-   {:cmd "stop music"         :fn (spotify/run! "pause")}
+   {:cmd "show my playlist"      :fn spotify/show-my-playlists!}
+   {:cmd "play my playlist (.+)" :fn spotify/play-my-playlist!}
+   {:cmd "find album (.+)"       :fn (spotify/find! "album")}
+   {:cmd "play album (.+)"       :fn (spotify/play! "album")}
+   {:cmd "find artist (.+)"      :fn (spotify/find! "artist")}
+   {:cmd "play artist (.+)"      :fn (spotify/play! "artist")}
+   {:cmd "find playlist (.+)"    :fn (spotify/find! "playlist")}
+   {:cmd "play playlist (.+)"    :fn (spotify/play! "playlist")}
+   {:cmd "find track (.+)"       :fn (spotify/find! "track")}
+   {:cmd "play track (.+)"       :fn (spotify/play! "track")}
+   {:cmd "next track"            :fn (spotify/run! "next track")}
+   {:cmd "previous track"        :fn (spotify/run! "previous track")}
+   {:cmd "play music"            :fn (spotify/run! "play")}
+   {:cmd "stop music"            :fn (spotify/run! "pause")}
    ;; weather
    {:cmd "announce weather near (.+)" :fn weather/announce!}])
 

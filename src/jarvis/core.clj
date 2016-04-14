@@ -10,8 +10,7 @@
             [jarvis.commands.core :as cmd]
             [jarvis.facebook :as fb]
             [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.params :refer [wrap-params]]
-            [ring.middleware.reload :refer [wrap-reload]]))
+            [ring.middleware.params :refer [wrap-params]]))
 
 (defn- handle-input! [input]
   (when (seq input)
@@ -44,9 +43,9 @@
          {:status 200
           :headers {"Content-Type" "text/html; charset=utf-8"}
           :body (render input output)}))
-  (GET "/webhook" request
+  (GET "/facebook-webhook" request
        (-> request :params (get "hub.challenge")))
-  (POST "/webhook" request
+  (POST "/facebook-webhook" request
         (doseq [event (-> request
                           (:body)
                           (slurp)
@@ -63,4 +62,4 @@
 (defn -main [& args]
   (if (seq args)
     (->> args (str/join " ") handle-input! println)
-    (run-jetty (-> app wrap-params wrap-reload) {:port 3000})))
+    (run-jetty (wrap-params app) {:port 3000})))

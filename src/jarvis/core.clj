@@ -4,6 +4,7 @@
             [clojure.stacktrace :as st]
             [clojure.string :as str]
             [compojure.core :refer [defroutes GET POST]]
+            [environ.core :refer [env]]
             [hiccup.core :refer [html]]
             [hiccup.element :refer [javascript-tag]]
             [hiccup.form :refer [form-to hidden-field]]
@@ -24,10 +25,17 @@
                  (hidden-field {:id :input} "input")
                  [:div
                   {:style "text-align:center"}
+                  [:div
+                   {:class "fb-send-to-messenger"
+                    :messenger_app_id (:facebook-app-id env)
+                    :page_id (:facebook-page-id env)
+                    :data-ref ""
+                    :color "blue"
+                    :size "xlarge"}]
                   [:button
                    {:id :listen
                     :onclick "recognize()"
-                    :style "font-size:60px; height:100px; width:900px"
+                    :style "font-size:60px; height:100px; width:600px"
                     :type :button}
                    "Listen"]])
         (when input
@@ -36,7 +44,11 @@
         (->> outputs
              (map #(str/replace % "\n" "<br>"))
              (interpose (repeat 2 [:br])))
-        (javascript-tag (-> "jarvis.js" (io/resource) (slurp)))))
+        (javascript-tag (-> "jarvis.js" (io/resource) (slurp)))
+        (javascript-tag (-> "facebook.js"
+                            (io/resource)
+                            (slurp)
+                            (str/replace "APP_ID" (:facebook-app-id env))))))
 
 (defroutes app
   (GET "/" [input]
@@ -55,6 +67,8 @@
                           (first)
                           (:messaging))
                 :let [sender-id (-> event :sender :id)]]
+          (when-let [data-ref (-> event :optin :ref)]
+            (fb/send-message! sender-id "Hello!"))
           (when-let [input (-> event :message :text)]
             (doseq [output (handle-input! input)]
               (fb/send-message! sender-id output))))

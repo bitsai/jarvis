@@ -24,7 +24,7 @@ Follow the setup instructions here: https://developers.facebook.com/docs/messeng
 
 If running locally, use ngrok to make webhook available to Facebook: https://ngrok.com/
 
-Use $FACEBOOK_PAGE_ACCESS_TOKEN to set Facebook page access token.
+To enable Facebook integration, please set $FACEBOOK_APP_ID, $FACEBOOK_PAGE_ID, and $FACEBOOK_PAGE_ACCESS_TOKEN.
 
 ## Commands
 
@@ -58,18 +58,18 @@ Use $FACEBOOK_PAGE_ACCESS_TOKEN to set Facebook page access token.
     play music
     stop music
 
-* By default, searches only return results available in the US. This can be overriden using $SPOTIFY_COUNTRY.
+By default, searches only return results available in the US. This can be overriden using $SPOTIFY_COUNTRY.
 
-* To enable playlist commands, please set $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET, and $SPOTIFY_USER_ID.
+To enable playlist commands, please set $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET, and $SPOTIFY_USER_ID.
 
 ### Weather announcement
 
     announce weather near <location>
 
-* To enable weather announcement, please set $WOLFRAM_ALPHA_APP_ID.
+To enable weather announcement, please set $WOLFRAM_ALPHA_APP_ID.
 
 ### Wolfram Alpha
 
-* If no command is given, the input is treated as a Wolfram Alpha query.
+If no command is given, the input is treated as a Wolfram Alpha query.
 
-* To enable Wolfram Alpha queries, please set $WOLFRAM_ALPHA_APP_ID.
+To enable Wolfram Alpha queries, please set $WOLFRAM_ALPHA_APP_ID.
